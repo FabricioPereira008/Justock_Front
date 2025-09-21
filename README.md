@@ -1,12 +1,69 @@
-# React + Vite
+# Justock - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma aplicação frontend moderna construída com React e Vite para o sistema Justock.
 
-Currently, two official plugins are available:
+## 📋 Pré-requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Antes de começar, certifique-se de que você tem instalado em sua máquina:
 
-## Expanding the ESLint configuration
+- **Node.js** (versão 16 ou superior)
+- **npm** (normalmente vem com o Node.js) ou **yarn**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Verificando a instalação
+
+```bash
+node --version
+npm --version
+```
+
+## 🚀 Instalação
+
+1. **Clone o repositório**
+   ```bash
+   git clone <url-do-repositorio>
+   cd frontend
+   ```
+
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
+
+## 🏃‍♂️ Executando o Projeto
+
+### Modo de Desenvolvimento
+
+Para iniciar o servidor de desenvolvimento com hot reload:
+
+```bash
+npm run dev
+```
+
+O aplicativo estará disponível em: `http://localhost:5173`
+
+## 📁 Estrutura do Projeto
+
+```
+frontend/
+├── public/          # Arquivos estáticos
+├── src/             # Código fonte
+│   ├── assets/      # Imagens e recursos
+│   ├── components/  # Componentes React
+│   ├── styles/      # Arquivos CSS
+│   ├── App.jsx      # Componente principal
+│   └── main.jsx     # Ponto de entrada
+├── package.json     # Dependências e scripts
+└── vite.config.js   # Configuração do Vite
+```
+
+## 🛠️ Scripts Disponíveis
+
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run lint` - Executa o ESLint
+
+## 🏗️ Tecnologias Utilizadas
+
+- **React** 19.1.1 - Biblioteca para interfaces de usuário
+- **Vite** - Build tool e dev server
+- **React Router DOM** - Roteamento para React
+- **ESLint** - Linting de código JavaScript
