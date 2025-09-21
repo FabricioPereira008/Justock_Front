@@ -1,0 +1,41 @@
+.navegacao {
+  background: #f0f9ff;
+  padding: 1rem 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 100%;
+}
+
+.container-navegacao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 3500px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+.logo-navegacao img {
+  height: 3rem;
+}
+
+.links_navegacao {
+  display: flex;
+  flex-grow: 0.5;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+}
+
+.links_navegacao a {
+  text-decoration: none;
+  font-weight: 600;
+  color: black;
+}
+
+.login_navegacao {
+  background: #0f3d3e;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: none;
+  cursor: pointer;
+}
