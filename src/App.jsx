@@ -1,16 +1,29 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BarraNavegacao from "./components/home/barra_navegacao.jsx";
 import TopoHome from "./components/home/topo_home.jsx";
 import RecursosDisponiveis from "./components/home/recursos_home.jsx"
 import RodapeHome from "./components/home/rodape_home.jsx"
+import Login from "./components/login/Login.jsx";
+import DashboardPage from "./components/dashboard/DashboardPage.jsx";
 
 function App() {
   return (
-    <div className="app-container">
-      <BarraNavegacao />
-      <TopoHome />
-      <RecursosDisponiveis />
-      <RodapeHome />
-    </div>
+    <Router>
+      <div className="app-container">
+      <Routes>
+        <Route path="/" element={
+          <>
+            <BarraNavegacao />
+            <TopoHome />
+            <RecursosDisponiveis />
+            <RodapeHome />
+          </>
+        } />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+      </div>
+    </Router>
   );
 }
 
