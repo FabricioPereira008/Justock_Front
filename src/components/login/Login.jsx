@@ -12,23 +12,23 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="login-logo">
+    <div className="container-login">
+      <div className="cartao-login">
+        <div className="logo-login">
           <img src={logo} alt="Logo JusTock" />
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
+        <form className="formulario-login" onSubmit={handleSubmit}>
+          <div className="grupo-formulario">
             <input
               type="email"
               id="email"
-              placeholder="Email"
+              placeholder="E-mail"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="grupo-formulario">
             <input
               type="password"
               id="senha"
@@ -37,12 +37,12 @@ function Login() {
             />
           </div>
 
-          <button type="submit" className="login-button">
-            Login
+          <button type="submit" className="botao-login">
+            Entrar
           </button>
         </form>
 
-        <div className="login-help">
+        <div className="ajuda-login">
           <a href="#">Precisa de ajuda para entrar?</a>
         </div>
       </div>

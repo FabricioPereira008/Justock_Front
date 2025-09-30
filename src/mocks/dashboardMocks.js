@@ -9,18 +9,18 @@ const mockData = {
   },
   "/api/recent-activity": {
     activities: [
-      { type: "validated", icon: "✔️", text: "Pagamento validado (#878)", time: "15m" },
-      { type: "refunded", icon: "❗", text: "Pedido reembolsado (#845)", time: "1h" },
-      { type: "new", icon: "✔️", text: "Pedido novo (#897)", time: "2h" },
-      { type: "synced", icon: "✔️", text: "Inventário sincronizado", time: "3h" },
+      { type: "validado", icon: "✔️", text: "Pagamento validado (#878)", time: "15m" },
+      { type: "reembolsado", icon: "❗", text: "Pedido reembolsado (#845)", time: "1h" },
+      { type: "novo", icon: "✔️", text: "Pedido novo (#897)", time: "2h" },
+      { type: "sincronizado", icon: "✔️", text: "Inventário sincronizado", time: "3h" },
     ],
   },
   "/api/alerts": {
     alerts: [
-      { type: "low", icon: "❗", text: "Item #78 - Em baixa", time: "1h" },
-      { type: "out-of-stock", icon: "❌", text: "Item #124 - Esgotado", time: "2h" },
-      { type: "low", icon: "❗", text: "Item #124 - Em baixa", time: "3h" },
-      { type: "updated", icon: "✔️", text: "Estoque atualizado", time: "4h" },
+      { type: "baixo", icon: "❗", text: "Item #78 - Em baixa", time: "1h" },
+      { type: "fora-estoque", icon: "❌", text: "Item #124 - Esgotado", time: "2h" },
+      { type: "baixo", icon: "❗", text: "Item #124 - Em baixa", time: "3h" },
+      { type: "atualizado", icon: "✔️", text: "Estoque atualizado", time: "4h" },
     ],
   },
 };

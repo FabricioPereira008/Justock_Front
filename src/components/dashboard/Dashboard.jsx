@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "./Sidebar";
+import BarraLateral from "./BarraLateral";
 import "../../styles/dashboard_styles/dashboard.css";
 
 import { Bar } from "react-chartjs-2";
@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-const DashboardPage = () => {
+const Dashboard = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [lowStockProducts, setLowStockProducts] = useState(0);
   const [connectedMarketplaces, setConnectedMarketplaces] = useState(0);
@@ -44,8 +44,18 @@ const DashboardPage = () => {
     ],
   });
 
-  const [recentActivity, setRecentActivity] = useState([]);
-  const [alerts, setAlerts] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([
+    { type: "validado", icon: "✔️", text: "Pagamento validado (#878)", time: "15m" },
+    { type: "reembolsado", icon: "❗", text: "Pedido reembolsado (#845)", time: "1h" },
+    { type: "novo", icon: "✔️", text: "Pedido novo (#897)", time: "2h" },
+    { type: "sincronizado", icon: "✔️", text: "Inventário sincronizado", time: "3h" },
+  ]);
+  const [alerts, setAlerts] = useState([
+    { type: "baixo", icon: "❗", text: "Item #78 - Em baixa", time: "1h" },
+    { type: "fora-estoque", icon: "❌", text: "Item #124 - Esgotado", time: "2h" },
+    { type: "baixo", icon: "❗", text: "Item #124 - Em baixa", time: "3h" },
+    { type: "atualizado", icon: "✔️", text: "Estoque atualizado", time: "4h" },
+  ]);
 
   useEffect(() => {
     // Fetch data for info boxes
@@ -98,59 +108,59 @@ const DashboardPage = () => {
   }, []);
 
   return (
-    <div className="dashboard-container">
-      <Sidebar />
-      <main className="dashboard-main">
-        <div className="info-boxes">
-          <div className="info-box blue">
+    <div className="painel-container">
+      <BarraLateral />
+      <main className="painel-principal">
+        <div className="caixas-info">
+          <div className="caixa-info azul">
             <div>Total de Produtos</div>
-            <div className="info-value">{totalProducts.toLocaleString()}</div>
+            <div className="valor-info">{totalProducts.toLocaleString()}</div>
           </div>
-          <div className="info-box orange">
+          <div className="caixa-info laranja">
             <div>Produtos em Baixa</div>
-            <div className="info-value">{lowStockProducts}</div>
+            <div className="valor-info">{lowStockProducts}</div>
           </div>
-          <div className="info-box dark-teal">
+          <div className="caixa-info teal-escuro">
             <div>Marketplaces Conectadas</div>
-            <div className="info-value">{connectedMarketplaces}</div>
+            <div className="valor-info">{connectedMarketplaces}</div>
           </div>
-          <div className="info-box light-green">
+          <div className="caixa-info verde-claro">
             <div>Status da Sincronização</div>
-            <div className="info-value">{syncStatus}</div>
+            <div className="valor-info">{syncStatus}</div>
           </div>
         </div>
 
-        <div className="dashboard-content">
-          <section className="inventory-overview">
-            <div className="section-header">
+        <div className="conteudo-painel">
+          <section className="visao-inventario">
+            <div className="cabecalho-secao">
               <h2>Visão Geral do Inventário</h2>
               <a href="#">ver mais {'>'}</a>
             </div>
             <Bar data={chartData} options={{ responsive: true, plugins: { legend: { display: false } } }} />
           </section>
 
-          <section className="side-sections">
-            <div className="recent-activity section-box">
+          <section className="secoes-lateral">
+            <div className="atividade-recente caixa-secao">
               <h3>Atividade Recente</h3>
               <ul>
                 {recentActivity.map((item, index) => (
-                  <li key={index} className={`activity-item ${item.type}`}>
-                    <span className="activity-icon">{item.icon}</span>
-                    <span className="activity-text">{item.text}</span>
-                    <span className="activity-time">{item.time}</span>
+                  <li key={index} className={`item-atividade ${item.type}`}>
+                    <span className="icone-atividade">{item.icon}</span>
+                    <span className="texto-atividade">{item.text}</span>
+                    <span className="tempo-atividade">{item.time}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="alerts section-box">
+            <div className="alertas caixa-secao">
               <h3>Alertas</h3>
               <ul>
                 {alerts.map((alert, index) => (
-                  <li key={index} className={`alert-item ${alert.type}`}>
-                    <span className="alert-icon">{alert.icon}</span>
-                    <span className="alert-text">{alert.text}</span>
-                    <span className="alert-time">{alert.time}</span>
+                  <li key={index} className={`item-alerta ${alert.type}`}>
+                    <span className="icone-alerta">{alert.icon}</span>
+                    <span className="texto-alerta">{alert.text}</span>
+                    <span className="tempo-alerta">{alert.time}</span>
                   </li>
                 ))}
               </ul>
@@ -162,4 +172,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default Dashboard;

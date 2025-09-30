@@ -4,7 +4,7 @@ import TopoHome from "./components/home/topo_home.jsx";
 import RecursosDisponiveis from "./components/home/recursos_home.jsx"
 import RodapeHome from "./components/home/rodape_home.jsx"
 import Login from "./components/login/Login.jsx";
-import DashboardPage from "./components/dashboard/DashboardPage.jsx";
+import Dashboard from "./components/dashboard/Dashboard.jsx";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           </>
         } />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
       </div>
     </Router>

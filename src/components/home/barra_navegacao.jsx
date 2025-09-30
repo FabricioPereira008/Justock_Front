@@ -1,12 +1,15 @@
 import "../../styles/home_styles/barra_navegacao.css";
 import logo from "../../assets/logo.png";
+import { Link } from "react-router-dom";
 
 function BarraNavegacao() {
   return (
     <nav className="navegacao">
       <div className="container-navegacao">
         <div className="logo-navegacao">
-            <img src={logo} alt="Logo JusTock" />
+            <Link to="/">
+              <img src={logo} alt="Logo JusTock" />
+            </Link>
         </div>
         <ul className="links_navegacao">
           <li><a href="#">Home</a></li>
@@ -16,7 +19,9 @@ function BarraNavegacao() {
           <li><a href="#">Contato</a></li>
           <li><a href="#">Suporte</a></li>
         </ul>
-        <button className="login_navegacao">Login</button>
+        <Link to="/login">
+          <button className="login_navegacao">Login</button>
+        </Link>
       </div>
     </nav>
   );

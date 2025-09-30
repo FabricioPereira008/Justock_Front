@@ -1,23 +1,23 @@
-.dashboard-container {
+.painel-container {
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
   background-color: #f5f9fa;
 }
 
-.dashboard-main {
+.painel-principal {
   flex-grow: 1;
   padding: 20px;
   overflow-y: auto;
 }
 
-.info-boxes {
+.caixas-info {
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
 }
 
-.info-box {
+.caixa-info {
   flex: 1;
   padding: 15px;
   border-radius: 6px;
@@ -30,33 +30,33 @@
   align-items: center;
 }
 
-.info-box .info-value {
+.caixa-info .valor-info {
   font-size: 2rem;
   margin-top: 5px;
 }
 
-.info-box.blue {
+.caixa-info.azul {
   background-color: #005bff;
 }
 
-.info-box.orange {
+.caixa-info.laranja {
   background-color: #f97316;
 }
 
-.info-box.dark-teal {
+.caixa-info.teal-escuro {
   background-color: #0a3b3b;
 }
 
-.info-box.light-green {
+.caixa-info.verde-claro {
   background-color: #a4d037;
 }
 
-.dashboard-content {
+.conteudo-painel {
   display: flex;
   gap: 20px;
 }
 
-.inventory-overview {
+.visao-inventario {
   flex: 2;
   background: white;
   border-radius: 6px;
@@ -64,56 +64,56 @@
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-.section-header {
+.cabecalho-secao {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.section-header h2 {
+.cabecalho-secao h2 {
   margin: 0;
   font-size: 1.2rem;
   color: #1a3a3a;
 }
 
-.section-header a {
+.cabecalho-secao a {
   font-size: 0.9rem;
   color: #007bff;
   text-decoration: none;
   cursor: pointer;
 }
 
-.side-sections {
+.secoes-lateral {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.section-box {
+.caixa-secao {
   background: white;
   border-radius: 6px;
   padding: 15px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-.section-box h3 {
+.caixa-secao h3 {
   margin-top: 0;
   color: #1a3a3a;
   font-size: 1.1rem;
   margin-bottom: 10px;
 }
 
-.recent-activity ul,
-.alerts ul {
+.atividade-recente ul,
+.alertas ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.activity-item,
-.alert-item {
+.item-atividade,
+.item-alerta {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -121,48 +121,48 @@
   font-size: 0.9rem;
 }
 
-.activity-icon,
-.alert-icon {
+.icone-atividade,
+.icone-alerta {
   margin-right: 8px;
 }
 
-.activity-text,
-.alert-text {
+.texto-atividade,
+.texto-alerta {
   flex-grow: 1;
 }
 
-.activity-time,
-.alert-time {
+.tempo-atividade,
+.tempo-alerta {
   color: #999;
   font-size: 0.8rem;
   margin-left: 10px;
 }
 
 /* Example colors for activity and alert types */
-.activity-item.validated {
+.item-atividade.validado {
   color: #4caf50;
 }
 
-.activity-item.refunded {
+.item-atividade.reembolsado {
   color: #f44336;
 }
 
-.activity-item.new {
+.item-atividade.novo {
   color: #4caf50;
 }
 
-.activity-item.synced {
+.item-atividade.sincronizado {
   color: #4caf50;
 }
 
-.alert-item.low {
+.item-alerta.baixo {
   color: #f44336;
 }
 
-.alert-item.out-of-stock {
+.item-alerta.fora-estoque {
   color: #f44336;
 }
 
-.alert-item.updated {
+.item-alerta.atualizado {
   color: #4caf50;
 }
