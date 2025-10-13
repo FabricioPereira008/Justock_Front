@@ -20,37 +20,37 @@ const BarraLateral = () => {
       <ul className="barra_lateral-list">
         <li>
           <NavLink to="/dashboard" className="barra_lateral-link" activeClassName="active">
-            <img src={Dashboard} alt="Dashboard" />
+            <img src={Dashboard} alt="Dashboard" title="Dashboard" />
           </NavLink>
         </li>
         <li>
           <NavLink to="/products" className="barra_lateral-link" activeClassName="active">
-            <img src={Produtos} alt="Products" />
+            <img src={Produtos} alt="Products" title="Produtos" />
           </NavLink>
         </li>
         <li>
           <NavLink to="/list" className="barra_lateral-link" activeClassName="active">
-            <img src={Pedidos} alt="List" />
+            <img src={Pedidos} alt="List" title="Pedidos" />
           </NavLink>
         </li>
         <li>
           <NavLink to="/links" className="barra_lateral-link" activeClassName="active">
-            <img src={Conexoes} alt="Links" />
+            <img src={Conexoes} alt="Links" title="Conexões" />
           </NavLink>
         </li>
         <li>
           <NavLink to="/reports" className="barra_lateral-link" activeClassName="active">
-            <img src={Relatorios} alt="Reports" />
+            <img src={Relatorios} alt="Reports" title="Relatórios" />
           </NavLink>
         </li>
         <li>
           <NavLink to="/clock" className="barra_lateral-link" activeClassName="active">
-            <img src={Suporte} alt="Clock" />
+            <img src={Suporte} alt="Clock" title="Suporte" />
           </NavLink>
         </li>
         <li>
           <NavLink to="/settings" className="barra_lateral-link" activeClassName="active">
-            <img src={Configs} alt="Settings" />
+            <img src={Configs} alt="Settings" title="Configurações" />
           </NavLink>
         </li>
       </ul>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BarraLateral from "./BarraLateral";
+import BarraSuperior from "./BarraSuperior";
 import "../../styles/dashboard_styles/dashboard.css";
 
 import { Bar } from "react-chartjs-2";
@@ -111,61 +112,64 @@ const Dashboard = () => {
     <div className="painel-container">
       <BarraLateral />
       <main className="painel-principal">
-        <div className="caixas-info">
-          <div className="caixa-info azul">
-            <div>Total de Produtos</div>
-            <div className="valor-info">{totalProducts.toLocaleString()}</div>
-          </div>
-          <div className="caixa-info laranja">
-            <div>Produtos em Baixa</div>
-            <div className="valor-info">{lowStockProducts}</div>
-          </div>
-          <div className="caixa-info teal-escuro">
-            <div>Marketplaces Conectadas</div>
-            <div className="valor-info">{connectedMarketplaces}</div>
-          </div>
-          <div className="caixa-info verde-claro">
-            <div>Status da Sincronização</div>
-            <div className="valor-info">{syncStatus}</div>
-          </div>
-        </div>
-
-        <div className="conteudo-painel">
-          <section className="visao-inventario">
-            <div className="cabecalho-secao">
-              <h2>Visão Geral do Inventário</h2>
-              <a href="#">ver mais {'>'}</a>
+        <BarraSuperior />
+        <div className="main-content">
+          <div className="caixas-info">
+            <div className="caixa-info azul">
+              <div>Total de Produtos</div>
+              <div className="valor-info">{totalProducts.toLocaleString()}</div>
             </div>
-            <Bar data={chartData} options={{ responsive: true, plugins: { legend: { display: false } } }} />
-          </section>
-
-          <section className="secoes-lateral">
-            <div className="atividade-recente caixa-secao">
-              <h3>Atividade Recente</h3>
-              <ul>
-                {recentActivity.map((item, index) => (
-                  <li key={index} className={`item-atividade ${item.type}`}>
-                    <span className="icone-atividade">{item.icon}</span>
-                    <span className="texto-atividade">{item.text}</span>
-                    <span className="tempo-atividade">{item.time}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="caixa-info laranja">
+              <div>Produtos em Baixa</div>
+              <div className="valor-info">{lowStockProducts}</div>
             </div>
-
-            <div className="alertas caixa-secao">
-              <h3>Alertas</h3>
-              <ul>
-                {alerts.map((alert, index) => (
-                  <li key={index} className={`item-alerta ${alert.type}`}>
-                    <span className="icone-alerta">{alert.icon}</span>
-                    <span className="texto-alerta">{alert.text}</span>
-                    <span className="tempo-alerta">{alert.time}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="caixa-info teal-escuro">
+              <div>Marketplaces Conectadas</div>
+              <div className="valor-info">{connectedMarketplaces}</div>
             </div>
-          </section>
+            <div className="caixa-info verde-claro">
+              <div>Status da Sincronização</div>
+              <div className="valor-info">{syncStatus}</div>
+            </div>
+          </div>
+
+          <div className="conteudo-painel">
+            <section className="visao-inventario">
+              <div className="cabecalho-secao">
+                <h2>Visão Geral do Inventário</h2>
+                <a href="#">ver mais {'>'}</a>
+              </div>
+              <Bar data={chartData} options={{ responsive: true, plugins: { legend: { display: false } } }} />
+            </section>
+
+            <section className="secoes-lateral">
+              <div className="atividade-recente caixa-secao">
+                <h3>Atividade Recente</h3>
+                <ul>
+                  {recentActivity.map((item, index) => (
+                    <li key={index} className={`item-atividade ${item.type}`}>
+                      <span className="icone-atividade">{item.icon}</span>
+                      <span className="texto-atividade">{item.text}</span>
+                      <span className="tempo-atividade">{item.time}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="alertas caixa-secao">
+                <h3>Alertas</h3>
+                <ul>
+                  {alerts.map((alert, index) => (
+                    <li key={index} className={`item-alerta ${alert.type}`}>
+                      <span className="icone-alerta">{alert.icon}</span>
+                      <span className="texto-alerta">{alert.text}</span>
+                      <span className="tempo-alerta">{alert.time}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          </div>
         </div>
       </main>
     </div>
