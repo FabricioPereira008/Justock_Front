@@ -18,24 +18,24 @@ const BarraSuperior = () => {
 
   return (
     <div className="barra-superior">
-      <div className="search-section">
-        <img src={Pesquisa} alt="Pesquisar" className="search-icon" />
+      <div className="secao-pesquisa">
+        <img src={Pesquisa} alt="Pesquisar" className="icone-pesquisa" />
         <input
           type="text"
           placeholder="Pesquisar"
-          className="search-input"
+          className="entrada-pesquisa"
         />
       </div>
-      <div className="right-section">
-        <img src={Notificacao} alt="Notificações" className="bell-icon" onClick={toggleNotifications} />
+      <div className="secao-direita">
+        <img src={Notificacao} alt="Notificações" className="icone-sino" onClick={toggleNotifications} />
         {showNotifications && (
-          <div className={`notifications-dropdown ${showNotifications ? 'show' : ''}`}>
+          <div className={`dropdown-notificacoes ${showNotifications ? 'show' : ''}`}>
             <p>Sem notificações no momento</p>
           </div>
         )}
-        <div className="user-avatar" onClick={toggleProfile}>U</div>
+        <div className="avatar-usuario" onClick={toggleProfile}>U</div>
         {showProfile && (
-          <div className={`profile-dropdown ${showProfile ? 'show' : ''}`}>
+          <div className={`dropdown-perfil ${showProfile ? 'show' : ''}`}>
             <a href="/profile">Ver Perfil</a>
           </div>
         )}
