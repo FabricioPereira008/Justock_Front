@@ -44,7 +44,6 @@ function mockFetch(url) {
   });
 }
 
-// Override global fetch for testing
 if (typeof window !== "undefined") {
   window.originalFetch = window.fetch;
   window.fetch = mockFetch;

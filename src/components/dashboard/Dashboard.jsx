@@ -59,7 +59,6 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    // Fetch data for info boxes
     fetch("/api/total-products")
       .then((res) => res.json())
       .then((data) => setTotalProducts(data.total));
@@ -76,7 +75,6 @@ const Dashboard = () => {
       .then((res) => res.json())
       .then((data) => setSyncStatus(data.status));
 
-    // Fetch chart data
     fetch("/api/inventory-overview")
       .then((res) => res.json())
       .then((data) => {
@@ -97,12 +95,10 @@ const Dashboard = () => {
         });
       });
 
-    // Fetch recent activity
     fetch("/api/recent-activity")
       .then((res) => res.json())
       .then((data) => setRecentActivity(data.activities));
 
-    // Fetch alerts
     fetch("/api/alerts")
       .then((res) => res.json())
       .then((data) => setAlerts(data.alerts));

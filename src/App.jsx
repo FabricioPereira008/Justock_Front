@@ -6,6 +6,7 @@ import RodapeHome from "./components/home/rodape_home.jsx"
 import Login from "./components/login/Login.jsx";
 import Dashboard from "./components/dashboard/Dashboard.jsx";
 import Produtos from "./components/dashboard/Produtos.jsx";
+import Pedidos from "./components/dashboard/Pedidos.jsx";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/products" element={<Produtos />} />
+        <Route path="/list" element={<Pedidos />} />
       </Routes>
       </div>
     </Router>
