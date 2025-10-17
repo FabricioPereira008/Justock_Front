@@ -7,7 +7,6 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // For testing, navigate directly to dashboard
     navigate("/dashboard");
   };
 

@@ -21,7 +21,6 @@ npm --version
 1. **Clone o repositório**
    ```bash
    git clone <url-do-repositorio>
-   cd frontend
    ```
 
 2. **Instale as dependências**
