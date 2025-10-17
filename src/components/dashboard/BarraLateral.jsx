@@ -24,12 +24,12 @@ const BarraLateral = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/products" className="barra_lateral-link" activeClassName="active">
+          <NavLink to="/produtos" className="barra_lateral-link" activeClassName="active">
             <img src={Produtos} alt="Products" title="Produtos" />
           </NavLink>
         </li>
         <li>
-          <NavLink to="/list" className="barra_lateral-link" activeClassName="active">
+          <NavLink to="/pedidos" className="barra_lateral-link" activeClassName="active">
             <img src={Pedidos} alt="List" title="Pedidos" />
           </NavLink>
         </li>

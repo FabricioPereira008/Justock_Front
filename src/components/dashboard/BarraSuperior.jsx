@@ -6,6 +6,7 @@ import Pesquisa from "../../assets/pesquisa.png";
 const BarraSuperior = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const toggleNotifications = () => {
     setShowNotifications(prev => !prev);
@@ -14,6 +15,20 @@ const BarraSuperior = () => {
   const toggleProfile = () => {
     setShowProfile(prev => !prev);
     setShowNotifications(false);
+  };
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    setShowLogoutModal(true);
+    setShowProfile(false);
+  };
+
+  const handleConfirmLogout = () => {
+    window.location.href = '/login';
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   return (
@@ -37,9 +52,21 @@ const BarraSuperior = () => {
         {showProfile && (
           <div className={`dropdown-perfil ${showProfile ? 'show' : ''}`}>
             <a href="/profile">Ver Perfil</a>
+            <a href="#" onClick={handleLogout}>Sair</a>
           </div>
         )}
       </div>
+      {showLogoutModal && (
+        <div className="modal-sobreposicao">
+          <div className="modal-conteudo">
+            <p>Tem certeza que quer sair da conta?</p>
+            <div className="modal-botoes">
+              <button className="btn-nao" onClick={handleCancelLogout}>NÃO</button>
+              <button className="btn-sim" onClick={handleConfirmLogout}>SIM</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

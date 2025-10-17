@@ -23,8 +23,8 @@ function App() {
         } />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/products" element={<Produtos />} />
-        <Route path="/list" element={<Pedidos />} />
+        <Route path="/produtos" element={<Produtos />} />
+        <Route path="/pedidos" element={<Pedidos />} />
       </Routes>
       </div>
     </Router>
