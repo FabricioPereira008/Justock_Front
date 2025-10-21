@@ -1,4 +1,4 @@
-import "../../styles/home_styles/rodape_home.css";
+import "../../styles/pages/home/rodape_home.css";
 
 function RodapeHome() {
   return (

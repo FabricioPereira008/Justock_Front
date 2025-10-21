@@ -1,4 +1,4 @@
-import "../../styles/home_styles/recursos_home.css";
+import "../../styles/pages/home/recursos_home.css";
 import Reset from "../../assets/reset.png";
 import Carrinho from "../../assets/carrinho.png";
 import Alarme from "../../assets/alarme.png";

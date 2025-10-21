@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import BarraNavegacao from "./components/home/barra_navegacao.jsx";
-import TopoHome from "./components/home/topo_home.jsx";
-import RecursosDisponiveis from "./components/home/recursos_home.jsx"
-import RodapeHome from "./components/home/rodape_home.jsx"
-import Login from "./components/login/Login.jsx";
-import Dashboard from "./components/dashboard/Dashboard.jsx";
-import Produtos from "./components/dashboard/Produtos.jsx";
-import Pedidos from "./components/dashboard/Pedidos.jsx";
+import BarraNavegacao from "./pages/home/barra_navegacao.jsx";
+import TopoHome from "./pages/home/topo_home.jsx";
+import RecursosDisponiveis from "./pages/home/recursos_home.jsx"
+import RodapeHome from "./pages/home/rodape_home.jsx"
+import Login from "./pages/login/Login.jsx";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import Produtos from "./pages/dashboard/Produtos.jsx";
+import Pedidos from "./pages/dashboard/Pedidos.jsx";
 
 function App() {
   return (

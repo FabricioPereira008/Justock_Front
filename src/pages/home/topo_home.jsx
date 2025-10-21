@@ -1,4 +1,4 @@
-import "../../styles/home_styles/topo_home.css";
+import "../../styles/pages/home/topo_home.css";
 
 function TopoHome() {
   return (

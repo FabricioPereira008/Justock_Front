@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
-import BarraLateral from "./BarraLateral";
-import BarraSuperior from "./BarraSuperior";
-import "../../styles/dashboard_styles/dashboard.css";
-import "../../styles/dashboard_styles/pedidos.css";
+import BarraLateral from "../../components/dashboard/BarraLateral";
+import BarraSuperior from "../../components/dashboard/BarraSuperior";
+import "../../styles/pages/dashboard/dashboard.css";
+import "../../styles/pages/dashboard/pedidos.css";
 import "react-datepicker/dist/react-datepicker.css";
 
 const Pedidos = () => {

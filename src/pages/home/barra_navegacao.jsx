@@ -1,4 +1,4 @@
-import "../../styles/home_styles/barra_navegacao.css";
+import "../../styles/pages/home/barra_navegacao.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 
