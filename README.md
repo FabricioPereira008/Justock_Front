@@ -1,68 +1,56 @@
 # Justock - Frontend
 
-Uma aplicação frontend moderna construída com React e Vite para o sistema Justock.
+Sistema de gerenciamento frontend construído com React e Vite.
 
-## 📋 Pré-requisitos
+## Requisitos
 
-Antes de começar, certifique-se de que você tem instalado em sua máquina:
+- Node.js (versão 16 ou superior)
+- npm ou yarn
 
-- **Node.js** (versão 16 ou superior)
-- **npm** (normalmente vem com o Node.js) ou **yarn**
-
-### Verificando a instalação
+## Instalação
 
 ```bash
-node --version
-npm --version
+npm install
 ```
 
-## 🚀 Instalação
+## Execução
 
-1. **Clone o repositório**
-   ```bash
-   git clone <url-do-repositorio>
-   ```
-
-2. **Instale as dependências**
-   ```bash
-   npm install
-   ```
-
-## 🏃‍♂️ Executando o Projeto
-
-### Modo de Desenvolvimento
-
-Para iniciar o servidor de desenvolvimento com hot reload:
-
+Desenvolvimento:
 ```bash
 npm run dev
 ```
+Acesse: `http://localhost:5173`
 
-O aplicativo estará disponível em: `http://localhost:5173`
-
-## 📁 Estrutura do Projeto
-
-```
-frontend/
-├── public/          # Arquivos estáticos
-├── src/             # Código fonte
-│   ├── assets/      # Imagens e recursos
-│   ├── components/  # Componentes React
-│   ├── styles/      # Arquivos CSS
-│   ├── App.jsx      # Componente principal
-│   └── main.jsx     # Ponto de entrada
-├── package.json     # Dependências e scripts
-└── vite.config.js   # Configuração do Vite
+Build:
+```bash
+npm run build
 ```
 
-## 🛠️ Scripts Disponíveis
+## Estrutura do Projeto
 
-- `npm run dev` - Inicia o servidor de desenvolvimento
-- `npm run lint` - Executa o ESLint
+```
+├── public/                  # Arquivos estáticos públicos
+├── src/                     # Código fonte principal
+│   ├── assets/             # Recursos estáticos (imagens, ícones, etc.)
+│   ├── components/         # Componentes React reutilizáveis
+│   │   └── dashboard/      # Componentes específicos do dashboard
+│   ├── mocks/             # Dados mockados para desenvolvimento
+│   ├── pages/             # Páginas da aplicação
+│   │   ├── dashboard/     # Páginas do painel administrativo
+│   │   ├── home/         # Páginas da área pública
+│   │   └── login/        # Páginas de autenticação
+│   └── styles/           # Estilos CSS organizados por página
+│       └── pages/        # Estilos específicos para cada página
+├── index.html             # Ponto de entrada HTML
+├── vite.config.js         # Configuração do Vite
+└── eslint.config.js       # Configuração do ESLint
+```
 
-## 🏗️ Tecnologias Utilizadas
+## Tecnologias Principais
 
-- **React** 19.1.1 - Biblioteca para interfaces de usuário
-- **Vite** - Build tool e dev server
-- **React Router DOM** - Roteamento para React
-- **ESLint** - Linting de código JavaScript
+- React 19.1.1
+- Vite 7.1.2
+- React Router DOM 7.9.1
+- Chart.js 4.5.1
+- React DatePicker 8.8.0
+
