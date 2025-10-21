@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/dashboard_styles/barra_superior.css";
+import "./barra_superior.css";
 import Notificacao from "../../assets/notificacao.png";
 import Pesquisa from "../../assets/pesquisa.png";
 

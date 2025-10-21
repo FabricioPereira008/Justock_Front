@@ -7,6 +7,7 @@ import Login from "./pages/login/Login.jsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import Produtos from "./pages/dashboard/Produtos.jsx";
 import Pedidos from "./pages/dashboard/Pedidos.jsx";
+import Conexoes from "./pages/dashboard/Conexoes.jsx";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         } />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+  <Route path="/conexoes" element={<Conexoes />} />
         <Route path="/produtos" element={<Produtos />} />
         <Route path="/pedidos" element={<Pedidos />} />
       </Routes>
