@@ -3,6 +3,7 @@ import BarraLateral from "../../components/dashboard/BarraLateral";
 import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 
+import mockFetch from "../../mocks/dashboardMocks";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -45,45 +46,39 @@ const Dashboard = () => {
     ],
   });
 
-  const [recentActivity, setRecentActivity] = useState([
-    { type: "validado", icon: "✔️", text: "Pagamento validado (#878)", time: "15m" },
-    { type: "reembolsado", icon: "❗", text: "Pedido reembolsado (#845)", time: "1h" },
-    { type: "novo", icon: "✔️", text: "Pedido novo (#897)", time: "2h" },
-    { type: "sincronizado", icon: "✔️", text: "Inventário sincronizado", time: "3h" },
-  ]);
-  const [alerts, setAlerts] = useState([
-    { type: "baixo", icon: "❗", text: "Item #78 - Em baixa", time: "1h" },
-    { type: "fora-estoque", icon: "❌", text: "Item #124 - Esgotado", time: "2h" },
-    { type: "baixo", icon: "❗", text: "Item #124 - Em baixa", time: "3h" },
-    { type: "atualizado", icon: "✔️", text: "Estoque atualizado", time: "4h" },
-  ]);
+  // Os dados de recentActivity e alerts virão do backend futuramente.
+  // Os tipos podem ser: validado, reembolsado, novo, sincronizado, baixo, fora-estoque, atualizado, etc.
+  // Os ícones podem ser definidos no frontend conforme o tipo, por exemplo:
+  // validado/novo/sincronizado/atualizado: verificado, baixo/reembolsado: exclamação, fora-estoque: X, etc.
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
-    fetch("/api/total-products")
-      .then((res) => res.json())
-      .then((data) => setTotalProducts(data.total));
+    mockFetch("/api/total-products")
+      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
+      .then((data) => setTotalProducts(data && typeof data.total === 'number' ? data.total : 0));
 
-    fetch("/api/low-stock-products")
-      .then((res) => res.json())
-      .then((data) => setLowStockProducts(data.total));
+    mockFetch("/api/low-stock-products")
+      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
+      .then((data) => setLowStockProducts(data && typeof data.total === 'number' ? data.total : 0));
 
-    fetch("/api/connected-marketplaces")
-      .then((res) => res.json())
-      .then((data) => setConnectedMarketplaces(data.total));
+    mockFetch("/api/connected-marketplaces")
+      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
+      .then((data) => setConnectedMarketplaces(data && typeof data.total === 'number' ? data.total : 0));
 
-    fetch("/api/sync-status")
-      .then((res) => res.json())
-      .then((data) => setSyncStatus(data.status));
+    mockFetch("/api/sync-status")
+      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
+      .then((data) => setSyncStatus(data && typeof data.status === 'string' ? data.status : 'OFF'));
 
-    fetch("/api/inventory-overview")
-      .then((res) => res.json())
+    mockFetch("/api/inventory-overview")
+      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
       .then((data) => {
         setChartData({
-          labels: data.labels,
+          labels: (data && Array.isArray(data.labels)) ? data.labels : [],
           datasets: [
             {
               label: "Quantidade",
-              data: data.values,
+              data: (data && Array.isArray(data.values)) ? data.values : [],
               backgroundColor: [
                 "rgba(173, 214, 0, 0.8)",
                 "rgba(0, 0, 255, 0.8)",
@@ -95,13 +90,13 @@ const Dashboard = () => {
         });
       });
 
-    fetch("/api/recent-activity")
-      .then((res) => res.json())
-      .then((data) => setRecentActivity(data.activities));
+    mockFetch("/api/recent-activity")
+      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
+      .then((data) => setRecentActivity(data && Array.isArray(data.activities) ? data.activities : []));
 
-    fetch("/api/alerts")
-      .then((res) => res.json())
-      .then((data) => setAlerts(data.alerts));
+    mockFetch("/api/alerts")
+      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
+      .then((data) => setAlerts(data && Array.isArray(data.alerts) ? data.alerts : []));
   }, []);
 
   return (

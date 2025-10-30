@@ -1,6 +1,6 @@
 import "../../styles/pages/home/topo_home.css";
 
-function TopoHome() {
+function TopoHome({ onOpenPlanos }) {
   return (
     <section className="hero">
       <div className="hero-content">
@@ -9,7 +9,7 @@ function TopoHome() {
           Integre seu inventário com as maiores marketplaces do mercado
           <br />e automatize suas operações!
         </p>
-        <button>Comece agora o TESTE GRÁTIS!</button>
+        <button onClick={onOpenPlanos}>Comece agora o TESTE GRÁTIS!</button>
       </div>
 
       <div className="hero-right">

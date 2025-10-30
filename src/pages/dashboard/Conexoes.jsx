@@ -6,6 +6,7 @@ import "../../styles/pages/dashboard/conexoes.css";
 import ML from "../../assets/mercadolivre.png";
 import Shopee from "../../assets/shopee.png";
 import Amazon from "../../assets/amazon.png";
+import mockFetch from "../../mocks/dashboardMocks";
 
 
 const Conexoes = () => {
@@ -25,11 +26,18 @@ const Conexoes = () => {
         }
       })
       .catch(() => {
-        setMarketplaces([
-          { id: "mercado_livre", name: "Mercado Livre", totalVendas: 148, pedidosAtivos: 58, totalInventario: 104, connected: true },
-          { id: "shopee", name: "Shopee", connected: false },
-          { id: "amazon", name: "Amazon", totalVendas: 215, pedidosAtivos: 49, totalInventario: 121, connected: true },
-        ]);
+        mockFetch("/api/conexoes")
+          .then((res) => res && res.json ? res.json() : Promise.resolve(res))
+          .then((data) => {
+            if (data && data.marketplaces) {
+              setMarketplaces(data.marketplaces);
+            } else {
+              setMarketplaces([]);
+            }
+          })
+          .catch(() => {
+            setMarketplaces([]);
+          });
       })
       .finally(() => setCarregando(false));
   }, []);

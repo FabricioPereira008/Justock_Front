@@ -2,7 +2,8 @@ import "../../styles/pages/home/barra_navegacao.css";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 
-function BarraNavegacao() {
+function BarraNavegacao({ onOpenPlanos }) {
+
   return (
     <nav className="navegacao">
       <div className="container-navegacao">
@@ -14,7 +15,11 @@ function BarraNavegacao() {
         <ul className="links_navegacao">
           <li><a href="#">Home</a></li>
           <li><a href="#">Novidades</a></li>
-          <li><a href="#">Planos</a></li>
+          <li>
+            <a href="#" onClick={(e) => { e.preventDefault(); onOpenPlanos && onOpenPlanos(); }}>
+              Planos
+            </a>
+          </li>
           <li><a href="#">Sobre</a></li>
           <li><a href="#">Contato</a></li>
           <li><a href="#">Suporte</a></li>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import mockFetch from "../../mocks/dashboardMocks";
 import DatePicker from "react-datepicker";
 import BarraLateral from "../../components/dashboard/BarraLateral";
 import BarraSuperior from "../../components/dashboard/BarraSuperior";
@@ -12,9 +13,6 @@ const Pedidos = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [observation, setObservation] = useState("");
-
-  const initialOrders = [/* fallback inline kept */];
-
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filters, setFilters] = useState({
@@ -29,7 +27,7 @@ const Pedidos = () => {
   }, [orders]);
 
   useEffect(() => {
-    fetch('/api/pedidos')
+    mockFetch('/api/pedidos')
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
@@ -39,28 +37,7 @@ const Pedidos = () => {
         else setOrders([]);
       })
       .catch(() => {
-        setOrders([
-          { id: 1001, dataEmissao: "01/10/2025", dataEntrega: "05/10/2025", marketplace: "Mercado Livre", pagamento: "Cartão de Crédito", status: "Pendente" },
-          { id: 1002, dataEmissao: "02/10/2025", dataEntrega: "07/10/2025", marketplace: "Amazon", pagamento: "Boleto", status: "Enviado" },
-          { id: 1003, dataEmissao: "03/10/2025", dataEntrega: "08/10/2025", marketplace: "Shopee", pagamento: "Pix", status: "Entregue" },
-          { id: 1004, dataEmissao: "04/10/2025", dataEntrega: "", marketplace: "Mercado Livre", pagamento: "Cartão de Crédito", status: "Cancelado" },
-          { id: 1005, dataEmissao: "05/10/2025", dataEntrega: "10/10/2025", marketplace: "Amazon", pagamento: "Boleto", status: "Pendente" },
-          { id: 1006, dataEmissao: "06/10/2025", dataEntrega: "11/10/2025", marketplace: "Shopee", pagamento: "Pix", status: "Enviado" },
-          { id: 1007, dataEmissao: "07/10/2025", dataEntrega: "12/10/2025", marketplace: "Mercado Livre", pagamento: "Cartão de Crédito", status: "Entregue" },
-          { id: 1008, dataEmissao: "08/10/2025", dataEntrega: "", marketplace: "Amazon", pagamento: "Boleto", status: "Pendente" },
-          { id: 1009, dataEmissao: "09/10/2025", dataEntrega: "14/10/2025", marketplace: "Shopee", pagamento: "Pix", status: "Cancelado" },
-          { id: 1010, dataEmissao: "10/10/2025", dataEntrega: "15/10/2025", marketplace: "Mercado Livre", pagamento: "Cartão de Crédito", status: "Enviado" },
-          { id: 1011, dataEmissao: "11/10/2025", dataEntrega: "16/10/2025", marketplace: "Amazon", pagamento: "Boleto", status: "Entregue" },
-          { id: 1012, dataEmissao: "12/10/2025", dataEntrega: "", marketplace: "Shopee", pagamento: "Pix", status: "Pendente" },
-          { id: 1013, dataEmissao: "13/10/2025", dataEntrega: "18/10/2025", marketplace: "Mercado Livre", pagamento: "Cartão de Crédito", status: "Enviado" },
-          { id: 1014, dataEmissao: "14/10/2025", dataEntrega: "19/10/2025", marketplace: "Amazon", pagamento: "Boleto", status: "Entregue" },
-          { id: 1015, dataEmissao: "15/10/2025", dataEntrega: "", marketplace: "Shopee", pagamento: "Pix", status: "Cancelado" },
-          { id: 1016, dataEmissao: "16/10/2025", dataEntrega: "21/10/2025", marketplace: "Mercado Livre", pagamento: "Cartão de Crédito", status: "Pendente" },
-          { id: 1017, dataEmissao: "17/10/2025", dataEntrega: "22/10/2025", marketplace: "Amazon", pagamento: "Boleto", status: "Enviado" },
-          { id: 1018, dataEmissao: "18/10/2025", dataEntrega: "23/10/2025", marketplace: "Shopee", pagamento: "Pix", status: "Entregue" },
-          { id: 1019, dataEmissao: "19/10/2025", dataEntrega: "", marketplace: "Mercado Livre", pagamento: "Cartão de Crédito", status: "Pendente" },
-          { id: 1020, dataEmissao: "20/10/2025", dataEntrega: "25/10/2025", marketplace: "Amazon", pagamento: "Boleto", status: "Enviado" },
-        ]);
+        setOrders([]);
       });
   }, []);
 

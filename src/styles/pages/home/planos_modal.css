@@ -1,0 +1,199 @@
+.sobreposicao-planos {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInBg 0.25s ease-out;
+}
+
+@keyframes fadeInBg {
+  from { background: rgba(0,0,0,0); }
+  to { background: rgba(0,0,0,0.3); }
+}
+
+.caixa-planos {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 28px 28px 32px 28px;
+  width: min(1280px, 96vw);
+  animation: slideDownCenter 0.45s cubic-bezier(.22,.61,.36,1);
+  position: relative;
+}
+
+@keyframes slideDownCenter {
+  from { transform: translateY(-40vh); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.titulo-planos {
+  text-align: center;
+  font-size: 2.6rem;
+  margin-bottom: 28px;
+  color: #18413a;
+}
+
+.cartoes-planos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+.cartao-plano {
+  background: #fff;
+  border-radius: 14px;
+  border: 2px solid #e6e6e6;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+.cartao-plano.recomendado {
+  background: #0e3c3a;
+  color: #fff;
+  border: 2.5px solid #1ed760;
+  box-shadow: 0 4px 24px rgba(30,215,96,0.10);
+}
+
+.cartao-plano:not(.recomendado) {
+  background: #fff;
+  color: inherit;
+  border: 2px solid #e6e6e6;
+}
+
+.cartao-plano:not(.recomendado) h2 {
+  color: #111;
+}
+.cartao-plano:not(.recomendado) .preco-plano {
+  color: #ff6d3d;
+}
+
+.cartao-plano:not(.recomendado) .preco-plano span {
+  color: #444;
+}
+
+.cartao-plano:not(.recomendado) .beneficios-plano {
+  color: #222;
+}
+
+.cartao-plano:not(.recomendado) .botao-plano {
+  background: #0057ff;
+  color: #fff;
+}
+
+.selo-recomendado {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #1ed760;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 2px 10px;
+  letter-spacing: 1px;
+}
+
+.cartao-plano h2 {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.preco-plano {
+  font-size: 2.2rem;
+  color: #ff6d3d;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.preco-plano span {
+  font-size: 1.1rem;
+  color: #444;
+  font-weight: 400;
+}
+
+@media (max-width: 1100px) {
+  .cartoes-planos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .cartoes-planos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cartao-plano.recomendado .preco-plano span {
+  color: #fff;
+}
+
+.beneficios-plano {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 24px 0;
+  font-size: 1.08rem;
+  color: #222;
+}
+
+.cartao-plano.recomendado .beneficios-plano {
+  color: #fff;
+}
+
+.beneficios-plano li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.botao-plano {
+  background: #0057ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.botao-plano:hover {
+  background: #003fa3;
+}
+
+.fechar-planos {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  left: auto;
+  width: auto;
+  height: auto;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  color: #111 !important;
+  font-size: 45px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity .15s, transform .15s;
+  z-index: 2;
+}
+
+.fechar-planos:hover { opacity: 1; transform: scale(1.05); }
+.fechar-planos:focus { outline: 2px solid #1ed76033; outline-offset: 2px; }
