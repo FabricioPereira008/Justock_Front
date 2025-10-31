@@ -2,8 +2,8 @@ import "../../styles/pages/home/topo_home.css";
 
 function TopoHome({ onOpenPlanos }) {
   return (
-    <section className="hero">
-      <div className="hero-content">
+    <section id="home" className="topo">
+      <div className="topo-conteudo">
         <h1>Gestão de estoque rápida e eficaz</h1>
         <p>
           Integre seu inventário com as maiores marketplaces do mercado
@@ -11,14 +11,13 @@ function TopoHome({ onOpenPlanos }) {
         </p>
         <button onClick={onOpenPlanos}>Comece agora o TESTE GRÁTIS!</button>
       </div>
+      <div className="topo-direita">
+        <div className="topo-banner"></div>
 
-      <div className="hero-right">
-        <div className="hero-banner"></div>
-
-        <div className="hero-carousel">
-          <div className="carousel-indicator active"></div>
-          <div className="carousel-indicator"></div>
-          <div className="carousel-indicator"></div>
+        <div className="topo-carrossel">
+          <div className="indicador-carrossel ativo"></div>
+          <div className="indicador-carrossel"></div>
+          <div className="indicador-carrossel"></div>
         </div>
       </div>
     </section>

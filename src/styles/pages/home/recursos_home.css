@@ -1,13 +1,14 @@
-.features {
+.recursos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 6rem 2rem;
+  padding: 4rem 2rem 2.5rem;
+  scroll-margin-top: 5rem;
 }
 
-.feature-card {
+.cartao-recurso {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -18,7 +19,7 @@
   text-align: center;
 }
 
-.feature-icon {
+.icone-recurso {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,14 +30,14 @@
   border-radius: 0.5rem;
 }
 
-.feature-text {
+.texto-recurso {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
   align-items: center;
 }
 
-.feature-text h3 {
+.texto-recurso h3 {
   margin-top: 1rem;
   font-size: 2rem;
   font-weight: 800;
@@ -46,18 +47,18 @@
   line-height: 1.2;
 }
 
-.feature-title-container {
+.container-titulo-recurso {
   margin: 0;
 }
 
-.feature-divider {
+.divisor-recurso {
   height: 4px;
   background: #2563eb;
   width: 8rem;
   margin: 0.5rem auto;
 }
 
-.feature-text p {
+.texto-recurso p {
   color: black;
   font-size: 1.2rem;
   margin: 0;

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BarraNavegacao from "../pages/home/barra_navegacao.jsx";
 import TopoHome from "../pages/home/topo_home.jsx";
 import RecursosDisponiveis from "../pages/home/recursos_home.jsx";
+import SobreNos from "../pages/home/sobre_nos.jsx";
 import RodapeHome from "../pages/home/rodape_home.jsx";
 import PlanosModal from "../pages/home/planos_modal.jsx";
 import Login from "../pages/login/Login.jsx";
@@ -27,6 +28,7 @@ const Routs = () => {
                 <BarraNavegacao onOpenPlanos={openPlanos} />
                 <TopoHome onOpenPlanos={openPlanos} />
                 <RecursosDisponiveis />
+                <SobreNos />
                 <RodapeHome />
                 <PlanosModal open={planosOpen} onClose={closePlanos} />
               </>
