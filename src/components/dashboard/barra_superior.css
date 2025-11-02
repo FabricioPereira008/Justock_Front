@@ -43,27 +43,64 @@
   position: relative;
 }
 
-.icone-sino {
-  width: 33px;
-  height: 33px;
+.icone-suporte {
+  color: #0f3d3e;
+  font-size: 28px;
   cursor: pointer;
+}
+
+.icone-sino {
   position: relative;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 0;
+}
+
+.icone-sino svg {
+  width: 30px;
+  height: 30px;
+  color: #999999;
+}
+
+.icone-sino.has-unread svg {
+  color: #0f3d3e;
+  animation: ring 1.2s ease-in-out infinite;
 }
 
 .icone-sino::after {
-  content: '3';
+  content: attr(data-count);
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: red;
-  color: white;
-  border-radius: 50%;
-  width: 16px;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: #ffffff;
+  border-radius: 999px;
+  min-width: 16px;
   height: 16px;
+  padding: 0 4px;
   font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  line-height: 16px;
+  text-align: center;
+  display: none;
+}
+
+.icone-sino.has-unread::after {
+  display: inline-block;
+}
+
+@keyframes ring {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(15deg); }
+  30% { transform: rotate(-12deg); }
+  45% { transform: rotate(9deg); }
+  60% { transform: rotate(-6deg); }
+  75% { transform: rotate(3deg); }
+  100% { transform: rotate(0); }
 }
 
 .dropdown-notificacoes {

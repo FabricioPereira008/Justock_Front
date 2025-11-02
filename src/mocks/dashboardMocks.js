@@ -104,6 +104,140 @@ const mockData = {
       { type: "atualizado", icon: "✔️", text: "Estoque atualizado", time: "4h" },
     ],
   },
+  // Relatórios por ano
+  "/api/reports/2025": {
+    months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    // Total concluído do ano: 30.455 (alguns meses em branco por ser ano corrente)
+    marketplaces: {
+      "Amazon": {
+        // Reorganizado por mês para alternar liderança (mantém total do ano)
+        completed: [820, 780, 810, 860, 905, 880, 940, 990, 910, 770, 751, 0],
+        canceled:  (function(){ const r=[0.28,0.36,0.22,0.18,0.30,0.40,0.24,0.20,0.35,0.46,0.19,0.10]; return [820,780,810,860,905,880,940,990,910,770,751,0].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[820,780,810,860,905,880,940,990,910,770,751,0];
+          const price=[210,190,205,175,185,220,198,186,230,170,180,160];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      },
+      "Shopee": {
+        // Alternando liderança em vários meses
+        completed: [980, 795, 870, 885, 965, 905, 1120, 1005, 1065, 785, 1513, 0],
+        canceled:  (function(){ const r=[0.42,0.20,0.38,0.16,0.44,0.26,0.35,0.18,0.50,0.66,0.22,0.10]; return [980,795,870,885,965,905,1120,1005,1065,785,1513,0].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[980,795,870,885,965,905,1120,1005,1065,785,1513,0];
+          const price=[150,120,138,125,142,158,135,128,160,115,170,140];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      },
+      "Mercado Livre": {
+        // Alternando liderança em vários meses
+        completed: [840, 1050, 835, 920, 920, 1040, 955, 1180, 930, 870, 611, 0],
+        canceled:  (function(){ const r=[0.34,0.24,0.40,0.18,0.36,0.28,0.30,0.16,0.45,0.33,0.21,0.12]; return [840,1050,835,920,920,1040,955,1180,930,870,611,0].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[840,1050,835,920,920,1040,955,1180,930,870,611,0];
+          const price=[180,200,170,190,210,175,185,205,180,165,190,150];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      }
+    },
+    // Percentuais (somam ~100%) para compor o funil
+    categories: [
+      { name: "Processadores", percent: 27 },
+      { name: "Placas de vídeo", percent: 23 },
+      { name: "Placas-mãe", percent: 17 },
+      { name: "Memórias RAM", percent: 12 },
+      { name: "Armazenamento", percent: 9 },
+      { name: "Fontes", percent: 6 },
+      { name: "Coolers", percent: 4 },
+      { name: "Outros", percent: 2 }
+    ]
+  },
+  "/api/reports/2024": {
+    months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    // Total concluído do ano: 28.956
+    marketplaces: {
+      "Amazon": {
+        completed: [690, 720, 865, 730, 740, 940, 790, 710, 975, 745, 685, 743],
+        canceled:  (function(){ const r=[0.36,0.28,0.22,0.46,0.24,0.20,0.34,0.38,0.18,0.30,0.25,0.27]; return [690,720,865,730,740,940,790,710,975,745,685,743].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[690,720,865,730,740,940,790,710,975,745,685,743];
+          const price=[205,180,195,160,175,210,188,170,220,165,172,182];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      },
+      "Shopee": {
+        completed: [830, 740, 760, 905, 790, 800, 980, 840, 810, 940, 770, 656],
+        canceled:  (function(){ const r=[0.30,0.66,0.26,0.22,0.40,0.29,0.24,0.20,0.35,0.27,0.23,0.32]; return [830,740,760,905,790,800,980,840,810,940,770,656].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[830,740,760,905,790,800,980,840,810,940,770,656];
+          const price=[125,115,140,135,130,150,145,128,138,152,132,120];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      },
+      "Mercado Livre": {
+        completed: [720, 915, 705, 780, 920, 760, 820, 1010, 720, 780, 980, 692],
+        canceled:  (function(){ const r=[0.42,0.24,0.48,0.20,0.34,0.44,0.22,0.18,0.40,0.33,0.21,0.36]; return [720,915,705,780,920,760,820,1010,720,780,980,692].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[720,915,705,780,920,760,820,1010,720,780,980,692];
+          const price=[170,190,160,175,200,165,180,205,172,178,198,155];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      }
+    },
+    categories: [
+      { name: "Processadores", percent: 24 },
+      { name: "Placas de vídeo", percent: 22 },
+      { name: "Placas-mãe", percent: 18 },
+      { name: "Memórias RAM", percent: 13 },
+      { name: "Armazenamento", percent: 9 },
+      { name: "Fontes", percent: 7 },
+      { name: "Coolers", percent: 4 },
+      { name: "Outros", percent: 3 }
+    ]
+  },
+  "/api/reports/2023": {
+    months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    // Total concluído do ano: 27.896
+    marketplaces: {
+      "Amazon": {
+        completed: [700, 700, 820, 720, 730, 900, 760, 780, 930, 710, 720, 790],
+        canceled:  (function(){ const r=[0.45,0.40,0.26,0.20,0.34,0.24,0.38,0.32,0.18,0.42,0.28,0.30]; return [700,700,820,720,730,900,760,780,930,710,720,790].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[700,700,820,720,730,900,760,780,930,710,720,790];
+          const price=[198,175,190,165,170,205,180,185,210,168,172,188];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      },
+      "Shopee": {
+        completed: [680, 870, 740, 860, 770, 780, 940, 820, 790, 900, 740, 516],
+        canceled:  (function(){ const r=[0.34,0.22,0.50,0.18,0.30,0.41,0.24,0.20,0.36,0.33,0.25,0.38]; return [680,870,740,860,770,780,940,820,790,900,740,516].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[680,870,740,860,770,780,940,820,790,900,740,516];
+          const price=[120,140,125,135,130,160,145,138,150,142,128,118];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      },
+      "Mercado Livre": {
+        completed: [800, 720, 690, 760, 880, 740, 800, 970, 750, 760, 940, 420],
+        canceled:  (function(){ const r=[0.22,0.36,0.34,0.48,0.26,0.45,0.30,0.24,0.32,0.55,0.21,0.39]; return [800,720,690,760,880,740,800,970,750,760,940,420].map((v,i)=>Math.round(v*r[i])); })(),
+        revenue:   (function(){
+          const c=[800,720,690,760,880,740,800,970,750,760,940,420];
+          const price=[185,160,155,170,195,168,178,200,172,176,192,140];
+          return c.map((v,i)=> Math.round(v*price[i]));
+        })()
+      }
+    },
+    categories: [
+      { name: "Processadores", percent: 23 },
+      { name: "Placas de vídeo", percent: 21 },
+      { name: "Placas-mãe", percent: 17 },
+      { name: "Memórias RAM", percent: 13 },
+      { name: "Armazenamento", percent: 10 },
+      { name: "Fontes", percent: 7 },
+      { name: "Coolers", percent: 5 },
+      { name: "Outros", percent: 4 }
+    ]
+  },
 };
 
 function mockFetch(url) {

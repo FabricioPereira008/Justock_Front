@@ -11,6 +11,7 @@ import Dashboard from "../pages/dashboard/Dashboard.jsx";
 import Produtos from "../pages/dashboard/Produtos.jsx";
 import Pedidos from "../pages/dashboard/Pedidos.jsx";
 import Conexoes from "../pages/dashboard/Conexoes.jsx";
+import Relatorios from "../pages/dashboard/Relatorios.jsx";
 
 const Routs = () => {
   const [planosOpen, setPlanosOpen] = useState(false);
@@ -39,6 +40,7 @@ const Routs = () => {
           <Route path="/conexoes" element={<Conexoes />} />
           <Route path="/produtos" element={<Produtos />} />
           <Route path="/pedidos" element={<Pedidos />} />
+          <Route path="/relatorios" element={<Relatorios />} />
         </Routes>
       </div>
     </Router>

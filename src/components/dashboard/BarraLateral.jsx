@@ -8,7 +8,6 @@ import Produtos from "../../assets/produtos.png";
 import Pedidos from "../../assets/pedidos.png";
 import ConexoesImg from "../../assets/conexoes.png";
 import Relatorios from "../../assets/relatorios.png";
-import Suporte from "../../assets/suporte_dash.png";
 import Configs from "../../assets/configs.png";
 
 const BarraLateral = () => {
@@ -46,16 +45,11 @@ const BarraLateral = () => {
         </li>
 
         <li>
-          <NavLink to="/reports" className={linkClass}>
+          <NavLink to="/relatorios" className={linkClass}>
             <img src={Relatorios} alt="Relatórios" title="Relatórios" />
           </NavLink>
         </li>
 
-        <li>
-          <NavLink to="/clock" className={linkClass}>
-            <img src={Suporte} alt="Suporte" title="Suporte" />
-          </NavLink>
-        </li>
 
         <li>
           <NavLink to="/settings" className={linkClass}>
