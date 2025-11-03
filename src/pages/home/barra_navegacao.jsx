@@ -1,10 +1,11 @@
 import "../../styles/pages/home/barra_navegacao.css";
 import logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SuporteModal from "../../components/suporte/SuporteModal";
 
 function BarraNavegacao({ onOpenPlanos, onOpenSuporte }) {
+  const location = useLocation();
   const [activeLink, setActiveLink] = useState("#home");
   const [openSuporte, setOpenSuporte] = useState(false);
 
@@ -69,11 +70,18 @@ function BarraNavegacao({ onOpenPlanos, onOpenSuporte }) {
     }
   };
 
+  const handleLogoClick = (e) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.location.reload();
+    }
+  };
+
   return (
     <nav className="navegacao">
       <div className="container-navegacao">
         <div className="logo-navegacao">
-          <Link to="/">
+          <Link to="/" onClick={handleLogoClick}>
             <img src={logo} alt="Logo JusTock" />
           </Link>
         </div>

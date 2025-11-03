@@ -15,9 +15,11 @@ function TopoHome({ onOpenPlanos }) {
   // Avança a cada 15s e reinicia após o último
   useEffect(() => {
     const id = setInterval(() => {
-      // avança um passo; quando chegar ao clone, tratamos no onTransitionEnd
       setIsTransitioning(true);
-      setIndex((prev) => prev + 1);
+      setIndex((prev) => {
+        const next = prev + 1;
+        return next > slides.length ? slides.length : next;
+      });
     }, 15000);
     return () => clearInterval(id);
   }, [slides.length]);
@@ -45,7 +47,8 @@ function TopoHome({ onOpenPlanos }) {
           <div
             className="topo-slider-track"
             style={{
-              transform: `translate3d(-${index * 100}%, 0, 0)`,
+              // Segurança extra: impede translate além do último slide (clone)
+              transform: `translate3d(-${Math.min(index, slides.length) * 100}%, 0, 0)`,
               transition: isTransitioning ? `transform ${TRANSITION_MS}ms ease` : "none",
             }}
             onTransitionEnd={() => {

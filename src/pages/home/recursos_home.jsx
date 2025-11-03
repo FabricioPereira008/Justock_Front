@@ -1,35 +1,31 @@
 import "../../styles/pages/home/recursos_home.css";
-import Reset from "../../assets/reset.png";
-import Carrinho from "../../assets/carrinho.png";
-import Alarme from "../../assets/alarme.png";
-import Mao from "../../assets/mao.png";
-import Suporte from "../../assets/suporte.png";
+import { FiRefreshCw, FiShoppingCart, FiClock, FiSliders, FiHeadphones } from "react-icons/fi";
 
 const features = [
   {
     title: "Sincronização Automática",
     text: "Sincronize o inventário entre plataformas sem esforço!",
-    icon: Reset,
+    icon: FiRefreshCw,
   },
   {
     title: "Marketplace Conectada",
     text: "Conecte suas contas e gerencie tudo em apenas um lugar!",
-    icon: Carrinho,
+    icon: FiShoppingCart,
   },
   {
     title: "Atualização em Tempo Real",
     text: "Sistema atualiza sozinho o status de pedidos!",
-    icon: Alarme,
+    icon: FiClock,
   },
   {
     title: "Controle sem Limites",
     text: "Atualizações e adições podem ser feitas também de forma manual!",
-    icon: Mao,
+    icon: FiSliders,
   },
   {
     title: "Suporte de Qualidade",
     text: "Nossa equipe está sempre pronta para melhor atendê-lo.",
-    icon: Suporte,
+    icon: FiHeadphones,
   },
 ];
 
@@ -39,7 +35,10 @@ function RecursosDisponiveis() {
       {features.map((f, index) => (
         <div key={index} className="cartao-recurso">
           <div className="icone-recurso">
-            <img src={f.icon} alt={f.title} />
+            {(() => {
+              const Icon = f.icon;
+              return <Icon className="icone-recurso-svg" aria-hidden="true" />;
+            })()}
           </div>
           <div className="texto-recurso">
             <div className="container-titulo-recurso">
