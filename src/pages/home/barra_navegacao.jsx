@@ -93,7 +93,7 @@ function BarraNavegacao({ onOpenPlanos, onOpenSuporte }) {
               onClick={(e) => handleScroll(e, "#recursos-home")}
               className={activeLink === "#recursos-home" ? "active" : ""}
             >
-              Novidades
+              Funcionalidades
             </a>
           </li>
           <li>

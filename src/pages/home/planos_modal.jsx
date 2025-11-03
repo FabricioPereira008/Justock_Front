@@ -49,6 +49,7 @@ const PlanosModal = ({ open, onClose }) => {
               )}
               <h2>{plano.nome}</h2>
               <div className="preco-plano">{plano.preco}<span> /mês</span></div>
+              <p className="mes-gratis">1 mês grátis</p>
               <ul className="beneficios-plano">
                 <li>✓ {plano.usuarios}</li>
                 <li>✓ {plano.integracoes}</li>
