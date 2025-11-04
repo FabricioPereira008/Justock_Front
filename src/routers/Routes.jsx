@@ -12,6 +12,7 @@ import Produtos from "../pages/dashboard/Produtos.jsx";
 import Pedidos from "../pages/dashboard/Pedidos.jsx";
 import Conexoes from "../pages/dashboard/Conexoes.jsx";
 import Relatorios from "../pages/dashboard/Relatorios.jsx";
+import Configuracoes from "../pages/dashboard/Configuracoes.jsx";
 
 const Routs = () => {
   const [planosOpen, setPlanosOpen] = useState(false);
@@ -41,6 +42,7 @@ const Routs = () => {
           <Route path="/produtos" element={<Produtos />} />
           <Route path="/pedidos" element={<Pedidos />} />
           <Route path="/relatorios" element={<Relatorios />} />
+          <Route path="/settings" element={<Configuracoes />} />
         </Routes>
       </div>
     </Router>

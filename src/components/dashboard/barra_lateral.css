@@ -1,53 +1,75 @@
 .barra_lateral {
   width: 72px;
+  flex: 0 0 72px;
   background-color: #0a2a2a;
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
+  transition: width .25s ease, flex-basis .25s ease;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.barra_lateral-logo-link {
-  display: block;
-  padding: 10px;
+.barra_lateral-logo-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 12px;
+  padding: 20px 0;
   border-radius: 5px;
   transition: background-color 0.3s ease;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
-.barra_lateral-logo-link:hover {
+.barra_lateral-logo-area:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.barra_lateral-logo {
-  width: 80px;
+.barra_lateral-logo-img {
+  width: 56px;
   height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
-.barra_lateral-list {
+.sidebar-detalhada .barra_lateral-logo-area {
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.sidebar-detalhada .barra_lateral-logo-img {
+  width: 104px;
+}
+
+.barra_lateral-lista {
   list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
 }
 
-.barra_lateral-link {
+.barra_lateral-item {
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 20px 0;
   width: 100%;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  box-sizing: border-box;
 }
 
-.barra_lateral-link img {
+.barra_lateral-item img {
   width: 40px;
   height: 40px;
   filter: brightness(0) invert(1);
 }
 
-.barra_lateral-link.active,
-.barra_lateral-link:hover {
+.barra_lateral-item.active,
+.barra_lateral-item:hover {
   background-color: #005f73;
 }

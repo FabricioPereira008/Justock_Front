@@ -1,0 +1,49 @@
+
+.painel-fonte-pequena .painel-container { font-size: 0.94rem; }
+.painel-fonte-media .painel-container { font-size: 1rem; }
+.painel-fonte-grande .painel-container { font-size: 1.12rem; }
+
+.painel-fonte-pequena .painel-container input,
+.painel-fonte-pequena .painel-container select,
+.painel-fonte-pequena .painel-container button,
+.painel-fonte-pequena .painel-container textarea,
+.painel-fonte-media .painel-container input,
+.painel-fonte-media .painel-container select,
+.painel-fonte-media .painel-container button,
+.painel-fonte-media .painel-container textarea,
+.painel-fonte-grande .painel-container input,
+.painel-fonte-grande .painel-container select,
+.painel-fonte-grande .painel-container button,
+.painel-fonte-grande .painel-container textarea {
+  font-size: 1em;
+}
+
+.sidebar-detalhada .barra_lateral {
+  width: 184px !important;
+  flex: 0 0 184px !important;
+  align-items: stretch;
+  transition: width .2s ease;
+}
+
+.sidebar-detalhada .barra_lateral-item {
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 20px 12px 20px 18px;
+  line-height: 1;
+}
+
+.sidebar-detalhada .barra_lateral-item img {
+  width: 40px;
+  height: 40px;
+}
+
+.barra_lateral-texto {
+  color: #c9d7d7; font-weight: 600; white-space: nowrap;
+  opacity: 0; max-width: 0; overflow: hidden; pointer-events: none;
+  transform: translateX(-6px);
+  transition: opacity .2s ease, max-width .25s ease, transform .25s ease;
+}
+.sidebar-detalhada .barra_lateral-texto {
+  opacity: 1; max-width: 160px; pointer-events: auto; transform: translateX(0);
+}
+.sidebar-detalhada .barra_lateral-item.active .barra_lateral-texto { color: #ffffff; }

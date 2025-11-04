@@ -42,6 +42,8 @@ const Dashboard = () => {
           "rgba(0, 51, 51, 0.8)",
           "rgba(255, 99, 71, 0.8)",
         ],
+  borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
+  borderSkipped: 'bottom',
       },
     ],
   });
@@ -85,6 +87,8 @@ const Dashboard = () => {
                 "rgba(0, 51, 51, 0.8)",
                 "rgba(255, 99, 71, 0.8)",
               ],
+              borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
+              borderSkipped: 'bottom',
             },
           ],
         });
