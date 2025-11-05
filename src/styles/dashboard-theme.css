@@ -1,7 +1,12 @@
+/* Root scaling so rem-based text across the app responds to font preference */
+html.painel-fonte-pequena { font-size: 93.75%; } /* ~15px */
+html.painel-fonte-media { font-size: 100%; }    /* 16px (default) */
+html.painel-fonte-grande { font-size: 112.5%; } /* ~18px */
 
-.painel-fonte-pequena .painel-container { font-size: 0.94rem; }
-.painel-fonte-media .painel-container { font-size: 1rem; }
-.painel-fonte-grande .painel-container { font-size: 1.12rem; }
+/* Keep container font-size inheriting from root to avoid double scaling */
+.painel-fonte-pequena .painel-container { font-size: inherit; }
+.painel-fonte-media .painel-container { font-size: inherit; }
+.painel-fonte-grande .painel-container { font-size: inherit; }
 
 .painel-fonte-pequena .painel-container input,
 .painel-fonte-pequena .painel-container select,
@@ -22,8 +27,9 @@
   width: 184px !important;
   flex: 0 0 184px !important;
   align-items: stretch;
-  transition: width .2s ease;
+  transition: width .35s ease-in-out;
 }
+
 
 .sidebar-detalhada .barra_lateral-item {
   justify-content: flex-start;
@@ -40,10 +46,19 @@
 .barra_lateral-texto {
   color: #c9d7d7; font-weight: 600; white-space: nowrap;
   opacity: 0; max-width: 0; overflow: hidden; pointer-events: none;
-  transform: translateX(-6px);
-  transition: opacity .2s ease, max-width .25s ease, transform .25s ease;
+  transform: translateX(-4px);
+  transition: opacity .38s ease-in-out, max-width .45s ease-in-out, transform .45s ease-in-out;
 }
 .sidebar-detalhada .barra_lateral-texto {
   opacity: 1; max-width: 160px; pointer-events: auto; transform: translateX(0);
 }
 .sidebar-detalhada .barra_lateral-item.active .barra_lateral-texto { color: #ffffff; }
+
+/* Disable transitions briefly to avoid flicker during initial expand in 'mista' */
+body.sidebar-no-transition .barra_lateral {
+  transition: none !important;
+}
+body.sidebar-no-transition .barra_lateral-texto {
+  transition: none !important;
+}
+

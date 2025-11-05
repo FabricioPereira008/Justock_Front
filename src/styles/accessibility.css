@@ -1,0 +1,138 @@
+/* Global accessibility styles toggled via classes on <body> */
+/* Load highly legible families from Google Fonts when needed */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@400;700&display=swap');
+
+/* Dyslexic-friendly font: attempt to use OpenDyslexic via CDN; gracefully fall back */
+@font-face {
+  font-family: 'OpenDyslexic';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('OpenDyslexic3 Regular'),
+    local('OpenDyslexic Regular'),
+    url('/fonts/opendyslexic/OpenDyslexic3-Regular.ttf') format('truetype'),
+    url('https://cdn.jsdelivr.net/gh/antijingoist/open-dyslexic/ttf/OpenDyslexic3-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  font-style: normal;
+  font-weight: 700;
+  src:
+    local('OpenDyslexic3 Bold'),
+    local('OpenDyslexic Bold'),
+    url('/fonts/opendyslexic/OpenDyslexic3-Bold.ttf') format('truetype'),
+    url('https://cdn.jsdelivr.net/gh/antijingoist/open-dyslexic/ttf/OpenDyslexic3-Bold.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* Even if the font fails to load (CORS/offline), keep readability improvements */
+/* Força a família em todo o dashboard para garantir impacto visível */
+body.dyslexic-font,
+body.dyslexic-font * {
+  /* Prefer Atkinson (mais neutra), depois Lexend, depois OpenDyslexic (local) */
+  font-family: 'Atkinson Hyperlegible', 'Lexend', 'OpenDyslexic', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif !important;
+}
+
+/* Ajustes de legibilidade mais pronunciados em blocos de texto */
+body.dyslexic-font :where(p, li, label, span, input, textarea, select, button) {
+  letter-spacing: 0.035em;
+  word-spacing: 0.12em;
+  line-height: 1.65;
+}
+body.dyslexic-font a { text-decoration: underline; text-underline-offset: 2px; }
+body.dyslexic-font :where(p, li) { text-align: left; hyphens: manual; }
+
+/* High contrast mode: stronger text/background, clear borders */
+/* High contrast (light) — increases contrast of text and controls without turning on dark theme */
+body.high-contrast { color: #000; }
+body.high-contrast a { color: #004aad; text-decoration: underline; text-underline-offset: 2px; }
+
+/* Increase overall text weight for stronger readability */
+body.high-contrast, body.high-contrast * {
+  font-weight: 700 !important;
+}
+
+/* Force key surfaces to white with black text for maximum contrast */
+body.high-contrast .painel-principal,
+body.high-contrast .barra-superior,
+body.high-contrast .barra_lateral,
+body.high-contrast .conf-cartao,
+body.high-contrast .dropdown-notificacoes,
+body.high-contrast .dropdown-perfil,
+body.high-contrast .modal-sobreposicao .modal-conteudo,
+body.high-contrast .suporte-janela {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea,
+body.high-contrast button {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+body.high-contrast .barra_lateral-item.active,
+body.high-contrast .conf-btn-primario { background:#ffffff !important; color:#000 !important; border-color:#000 !important; }
+
+/* Sidebar specific fixes so icons/text não 'somem' no alto contraste */
+body.high-contrast .barra_lateral { border-right: 3px solid #000 !important; }
+body.high-contrast .barra_lateral-item img { filter: none !important; } /* remove invert(1) que deixava ícones brancos no fundo branco */
+body.high-contrast .barra_lateral-ico { color: #000 !important; }
+
+/* Barra superior: ícones com sublinhado e contraste forte */
+body.high-contrast .icone-suporte { color:#000 !important; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+body.high-contrast .icone-sino { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+body.high-contrast .icone-sino svg { color:#000 !important; }
+body.high-contrast .avatar-usuario { background:#fff !important; color:#000 !important; border:2px solid #000 !important; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+body.high-contrast .barra_lateral-item:hover,
+body.high-contrast .barra_lateral-item.active { background-color: #e6e6e6 !important; }
+body.high-contrast .barra_lateral-texto { color: #000 !important; font-weight: 700; }
+body.high-contrast .barra_lateral a:focus-visible { outline: 3px solid #000 !important; outline-offset: -3px; background-color: #e6e6e6 !important; }
+
+/* Strong focus indicator */
+body.focus-visible-mode :where(a,button,input,select,textarea,[tabindex]):focus-visible {
+  outline: 3px solid #00e0ff !important;
+  outline-offset: 2px;
+  box-shadow: none !important;
+}
+
+/* Utility to reveal visually-hidden SR labels when desired */
+.sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+
+/* Screen-reader optimized: reduce motion and unexpected changes */
+body.sr-optimized *, body.sr-optimized *::before, body.sr-optimized *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Custom cursor: keep native behavior, but recolor and resize via data-URL */
+/* Regra geral: aplica seta personalizada */
+body.custom-cursor, body.custom-cursor * {
+  cursor: var(--jt-cursor-arrow) var(--jt-cursor-arrow-hotspot, 1 1), auto !important;
+}
+/* Alvos de clique: usar mão personalizada */
+body.custom-cursor a,
+body.custom-cursor button,
+body.custom-cursor [role="button"],
+body.custom-cursor [aria-controls],
+body.custom-cursor [onclick],
+body.custom-cursor .conf-btn-primario,
+body.custom-cursor .barra_lateral-item,
+body.custom-cursor .icone-sino,
+body.custom-cursor .icone-suporte {
+  cursor: var(--jt-cursor-hand) var(--jt-cursor-hand-hotspot, 8 2), pointer !important;
+}
+/* Campos de texto devem manter I-beam para clareza */
+body.custom-cursor input[type="text"],
+body.custom-cursor input[type="search"],
+body.custom-cursor input[type="email"],
+body.custom-cursor input[type="password"],
+body.custom-cursor textarea,
+body.custom-cursor [contenteditable="true"] {
+  cursor: text !important;
+}

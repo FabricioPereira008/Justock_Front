@@ -6,6 +6,7 @@ import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/pedidos.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { useSrOptimized, srProps } from "../../utils/useA11y";
 
 const Pedidos = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +16,7 @@ const Pedidos = () => {
   const [observation, setObservation] = useState("");
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
+  const srOpt = useSrOptimized();
   const [filters, setFilters] = useState({
     search: "",
     period: [null, null],
@@ -124,23 +126,25 @@ const Pedidos = () => {
       <BarraLateral />
       <main className="painel-principal">
         <BarraSuperior />
-        <div className="main-content">
+        <div className="main-content" {...srProps(srOpt, { role: 'main', 'aria-label': 'Lista de pedidos' })}>
           <div className="pedidos-header">
             <div className="filter-group">
-              <label>Nº Pedido:</label>
+              <label htmlFor="filtro-pedido">Nº Pedido:</label>
               <input
                 type="text"
                 className="filter-search"
                 value={filters.search}
                 onChange={(e) => handleFilterChange("search", e.target.value)}
+                id="filtro-pedido"
                 placeholder="Buscar por Nº Pedido"
               />
             </div>
 
             <div className="filter-group">
-              <label>Período:</label>
+              <label htmlFor="filtro-periodo">Período:</label>
               <DatePicker
                 className="filter-date-range"
+                id="filtro-periodo"
                 selectsRange={true}
                 startDate={filters.period[0]}
                 endDate={filters.period[1]}
@@ -152,10 +156,11 @@ const Pedidos = () => {
             </div>
 
             <div className="filter-group">
-              <label>Lojas:</label>
+              <label htmlFor="filtro-loja">Lojas:</label>
               <select
                 className="filter-select"
                 value={filters.marketplace}
+                id="filtro-loja"
                 onChange={(e) => handleFilterChange("marketplace", e.target.value)}
               >
                 <option>Todos</option>
@@ -166,10 +171,11 @@ const Pedidos = () => {
             </div>
 
             <div className="filter-group">
-              <label>Status:</label>
+              <label htmlFor="filtro-status">Status:</label>
               <select
                 className="filter-select"
                 value={filters.status}
+                id="filtro-status"
                 onChange={(e) => handleFilterChange("status", e.target.value)}
               >
                 <option>Todos</option>
@@ -180,20 +186,20 @@ const Pedidos = () => {
               </select>
             </div>
 
-            <button className="filter-button" onClick={applyFilters}>Filtrar</button>
+            <button className="filter-button" onClick={applyFilters} {...srProps(srOpt, { 'aria-label': 'Aplicar filtros' })}>Filtrar</button>
 
             {(filters.search ||
               filters.period[0] ||
               filters.period[1] ||
               filters.marketplace !== "Todos" ||
               filters.status !== "Todos") && (
-              <button className="clear-filter-button" onClick={clearFilters}>
+              <button className="clear-filter-button" onClick={clearFilters} {...srProps(srOpt, { 'aria-label': 'Limpar filtros' })}>
                 Limpar Filtro
               </button>
             )}
           </div>
 
-          <div className="pedidos-table-container">
+          <div className="pedidos-table-container" {...srProps(srOpt, { role: 'region', 'aria-label': 'Tabela de pedidos' })}>
             <table className="pedidos-table">
               <thead>
                 <tr>
@@ -207,7 +213,7 @@ const Pedidos = () => {
               </thead>
               <tbody>
                 {currentOrders.map((order) => (
-                  <tr key={order.id} onClick={() => handleRowClick(order)} style={{ cursor: "pointer" }}>
+                  <tr key={order.id} onClick={() => handleRowClick(order)} style={{ cursor: "pointer" }} {...srProps(srOpt, { 'aria-label': `Abrir detalhes do pedido ${order.id}` })}>
                     <td>{order.id}</td>
                     <td>{order.dataEmissao || "-"}</td>
                     <td>{order.dataEntrega || "-"}</td>
@@ -222,11 +228,11 @@ const Pedidos = () => {
 
           <div className="pedidos-footer">
             <div className="pagination">
-              <button className="page-button" onClick={goToPreviousPage} disabled={currentPage === 1}>
+              <button className="page-button" onClick={goToPreviousPage} disabled={currentPage === 1} {...srProps(srOpt, { 'aria-label': 'Página anterior' })}>
                 {"<"}
               </button>
-              <span className="page-info">{currentPage} de {totalPages}</span>
-              <button className="page-button" onClick={goToNextPage} disabled={currentPage === totalPages}>
+              <span className="page-info" {...srProps(srOpt, { 'aria-live': 'polite', 'aria-atomic': 'true' })}>{currentPage} de {totalPages}</span>
+              <button className="page-button" onClick={goToNextPage} disabled={currentPage === totalPages} {...srProps(srOpt, { 'aria-label': 'Próxima página' })}>
                 {">"}
               </button>
             </div>

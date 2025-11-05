@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
-  transition: width .25s ease, flex-basis .25s ease;
+  transition: width .45s ease-in-out, flex-basis .45s ease-in-out;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -45,11 +45,15 @@
   width: 104px;
 }
 
+
 .barra_lateral-lista {
   list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* mais espaço vertical entre os itens */
 }
 
 .barra_lateral-item {
@@ -69,7 +73,25 @@
   filter: brightness(0) invert(1);
 }
 
+/* React-icons support */
+.barra_lateral-ico {
+  font-size: 26px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.sidebar-detalhada .barra_lateral-ico {
+  font-size: 30px;
+}
+
+/* No mista-specific CSS needed; JS toggles 'sidebar-detalhada' to reuse the same visuals */
+
 .barra_lateral-item.active,
 .barra_lateral-item:hover {
   background-color: #005f73;
+}
+
+/* Disable transitions briefly on initial expand to avoid flicker in 'mista' */
+body.sidebar-no-transition .barra_lateral {
+  transition: none !important;
 }

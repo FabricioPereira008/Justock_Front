@@ -5,7 +5,8 @@
   font-size: 1.5rem;
 }
 
-.pagina-configuracoes { font-size: 1.06rem; }
+/* Inherit font-size from root so global font preference scales this page */
+.pagina-configuracoes { font-size: 1em; }
 
 .conf-grade {
   display: grid;
@@ -86,7 +87,7 @@
   background: #ffffff; color: #111; transition: all .2s ease;
 }
 .conf-tema-switch.escuro { background: #000000; color: #fff; border-color: #000; }
-.conf-tema-icone { display: none; font-size: 18px; line-height: 1; }
+.conf-tema-icone { display: none; font-size: 1.125rem; line-height: 1; }
 .conf-tema-switch.claro .sol { display: inline-flex; }
 .conf-tema-switch.escuro .lua { display: inline-flex; }
 .conf-tema-switch:focus { outline: none; box-shadow: 0 0 0 2px rgba(0,95,115,.2); }

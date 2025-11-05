@@ -13,6 +13,7 @@ import Pedidos from "../pages/dashboard/Pedidos.jsx";
 import Conexoes from "../pages/dashboard/Conexoes.jsx";
 import Relatorios from "../pages/dashboard/Relatorios.jsx";
 import Configuracoes from "../pages/dashboard/Configuracoes.jsx";
+import ErrorBoundary from "../components/common/ErrorBoundary.jsx";
 
 const Routs = () => {
   const [planosOpen, setPlanosOpen] = useState(false);
@@ -37,12 +38,12 @@ const Routs = () => {
             }
           />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/conexoes" element={<Conexoes />} />
-          <Route path="/produtos" element={<Produtos />} />
-          <Route path="/pedidos" element={<Pedidos />} />
-          <Route path="/relatorios" element={<Relatorios />} />
-          <Route path="/settings" element={<Configuracoes />} />
+          <Route path="/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
+          <Route path="/conexoes" element={<ErrorBoundary><Conexoes /></ErrorBoundary>} />
+          <Route path="/produtos" element={<ErrorBoundary><Produtos /></ErrorBoundary>} />
+          <Route path="/pedidos" element={<ErrorBoundary><Pedidos /></ErrorBoundary>} />
+          <Route path="/relatorios" element={<ErrorBoundary><Relatorios /></ErrorBoundary>} />
+          <Route path="/settings" element={<ErrorBoundary><Configuracoes /></ErrorBoundary>} />
         </Routes>
       </div>
     </Router>

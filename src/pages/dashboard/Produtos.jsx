@@ -4,6 +4,7 @@ import BarraLateral from "../../components/dashboard/BarraLateral";
 import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/produtos.css";
+import { useSrOptimized, srProps } from "../../utils/useA11y";
 
 const ModalAdicionarProduto = ({ isOpen, onClose, onAddProduct, nextId }) => {
   const [formData, setFormData] = useState({
@@ -121,6 +122,7 @@ const Produtos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const srOpt = useSrOptimized();
 
   const initialProducts = [/* fallback kept inline for now */];
 
@@ -238,11 +240,12 @@ const Produtos = () => {
       <BarraLateral />
       <main className="painel-principal">
         <BarraSuperior />
-        <div className="main-content">
-          <div className="cabecalho-produtos">
+        <div className="main-content" {...srProps(srOpt, { role: 'main', 'aria-label': 'Lista de produtos' })}>
+          <div className="cabecalho-produtos" {...srProps(srOpt, { role: 'region', 'aria-label': 'Filtros de produtos' })}>
             <div className="grupo-filtro">
-              <label>Categoria:</label>
+              <label htmlFor="filtro-categoria">Categoria:</label>
               <select
+                id="filtro-categoria"
                 className="selecao-filtro"
                 value={filters.categoria}
                 onChange={(e) => setFilters({ ...filters, categoria: e.target.value })}
@@ -256,8 +259,9 @@ const Produtos = () => {
               </select>
             </div>
             <div className="grupo-filtro">
-              <label>Preço:</label>
+              <label htmlFor="filtro-preco">Preço:</label>
               <select
+                id="filtro-preco"
                 className="selecao-filtro"
                 value={filters.preco}
                 onChange={(e) => setFilters({ ...filters, preco: e.target.value })}
@@ -272,8 +276,9 @@ const Produtos = () => {
               </select>
             </div>
             <div className="grupo-filtro">
-              <label>Marcador:</label>
+              <label htmlFor="filtro-marcador">Marcador:</label>
               <select
+                id="filtro-marcador"
                 className="selecao-filtro"
                 value={filters.marcador}
                 onChange={(e) => setFilters({ ...filters, marcador: e.target.value })}
@@ -284,13 +289,13 @@ const Produtos = () => {
                 <option>Descontinuado</option>
               </select>
             </div>
-            <button className="botao-filtro" onClick={applyFilters}>Filtrar</button>
+            <button className="botao-filtro" onClick={applyFilters} {...srProps(srOpt, { 'aria-label': 'Aplicar filtros' })}>Filtrar</button>
             {(filters.categoria !== "Todos os Categorias" || filters.preco !== "Todos os preços" || filters.marcador !== "Nenhum") && (
-              <button className="botao-limpar-filtro" onClick={clearFilters}>Limpar Filtro</button>
+              <button className="botao-limpar-filtro" onClick={clearFilters} {...srProps(srOpt, { 'aria-label': 'Limpar filtros' })}>Limpar Filtro</button>
             )}
           </div>
-          <div className="produtos-table-container">
-            <table className="produtos-table">
+          <div className="produtos-table-container" {...srProps(srOpt, { role: 'region', 'aria-label': 'Tabela de produtos' })}>
+            <table className="produtos-table" {...srProps(srOpt, { 'aria-describedby': 'produtos-legenda' })}>
               <thead>
                 <tr>
                   <th>ID</th>
@@ -318,6 +323,7 @@ const Produtos = () => {
                         className={`marker ${product.marcador}`}
                         value={product.marcador}
                         onChange={(e) => handleMarkerChange(product.id, e.target.value)}
+                        {...srProps(srOpt, { 'aria-label': `Definir marcador do produto ${product.nome || product.id}` })}
                       >
                         <option value="">Nenhum</option>
                         <option value="promotion">Promoção</option>
@@ -329,13 +335,14 @@ const Produtos = () => {
                 ))}
               </tbody>
             </table>
+            {srOpt && <p id="produtos-legenda" className="sr-only">Use as setas para navegar nas colunas, e a tecla Tab para acessar os controles por linha.</p>}
           </div>
           <div className="produtos-footer">
-            <button className="add-button" onClick={() => setIsModalOpen(true)}>Adicionar Produto</button>
+            <button className="add-button" onClick={() => setIsModalOpen(true)} {...srProps(srOpt, { 'aria-label': 'Adicionar novo produto' })}>Adicionar Produto</button>
             <div className="pagination">
-              <button className="page-button" onClick={goToPreviousPage} disabled={currentPage === 1}>{'<'}</button>
-              <span className="page-info">{currentPage} de {totalPages}</span>
-              <button className="page-button" onClick={goToNextPage} disabled={currentPage === totalPages}>{'>'}</button>
+              <button className="page-button" onClick={goToPreviousPage} disabled={currentPage === 1} {...srProps(srOpt, { 'aria-label': 'Página anterior' })}>{'<'}</button>
+              <span className="page-info" {...srProps(srOpt, { 'aria-live': 'polite', 'aria-atomic': 'true' })}>{currentPage} de {totalPages}</span>
+              <button className="page-button" onClick={goToNextPage} disabled={currentPage === totalPages} {...srProps(srOpt, { 'aria-label': 'Próxima página' })}>{'>'}</button>
             </div>
           </div>
         </div>

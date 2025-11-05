@@ -3,6 +3,7 @@ import "./barra_superior.css";
 import Pesquisa from "../../assets/pesquisa.png";
 import { FiHelpCircle, FiBell } from "react-icons/fi";
 import SuporteModal from "../suporte/SuporteModal";
+import { getAccessibilityPrefs } from "../../utils/accessibility";
 
 const BarraSuperior = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -14,6 +15,7 @@ const BarraSuperior = () => {
 
   const notificationsRef = useRef(null);
   const profileRef = useRef(null);
+  const [srOpt, setSrOpt] = useState(() => getAccessibilityPrefs().toggleLeitor === true);
 
   const toggleNotifications = () => {
     setShowNotifications(prev => !prev);
@@ -61,13 +63,26 @@ const BarraSuperior = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const onAcc = (e) => {
+      const v = e?.detail?.toggleLeitor;
+      if (typeof v === 'boolean') setSrOpt(v);
+      else setSrOpt(getAccessibilityPrefs().toggleLeitor === true);
+    };
+    window.addEventListener('jt:accessibility-updated', onAcc);
+    onAcc({ detail: getAccessibilityPrefs() });
+    return () => window.removeEventListener('jt:accessibility-updated', onAcc);
+  }, []);
+
   return (
-    <div className="barra-superior">
-      <div className="secao-pesquisa">
-        <img src={Pesquisa} alt="Pesquisar" className="icone-pesquisa" />
+    <div className="barra-superior" role="banner" aria-label="Barra superior">
+      <div className="secao-pesquisa" role="search" aria-label="Pesquisar">
+        <img src={Pesquisa} alt="" aria-hidden="true" className="icone-pesquisa" />
         <input
           type="text"
+          id="campo-pesquisa"
           placeholder="Pesquisar"
+          aria-label="Pesquisar"
           className="entrada-pesquisa"
         />
       </div>
@@ -76,26 +91,31 @@ const BarraSuperior = () => {
           className="icone-suporte"
           title="Suporte"
           aria-label="Suporte"
+          data-srlabel="Suporte"
           onClick={() => setOpenSuporte(true)}
         />
         <div ref={notificationsRef} style={{ position: 'relative', display: 'inline-flex' }}>
           <button
             type="button"
             className={`icone-sino ${notificationsCount > 0 ? 'has-unread' : ''}`}
-            aria-label="Notificações"
+            aria-label={`Notificações${srOpt ? `, ${notificationsCount} novas` : ''}`}
+            data-srlabel="Notificações"
             title="Notificações"
             data-count={notificationsCount}
+            aria-haspopup="menu"
+            aria-expanded={showNotifications}
+            aria-controls="dropdown-notificacoes"
             onClick={toggleNotifications}
           >
             <FiBell />
           </button>
           {showNotifications && (
-            <div className={`dropdown-notificacoes ${showNotifications ? 'show' : ''}`}>
+            <div id="dropdown-notificacoes" className={`dropdown-notificacoes ${showNotifications ? 'show' : ''}`} role="menu" aria-label="Lista de notificações" aria-live={srOpt ? 'polite' : undefined}>
               {notificationsCount > 0 ? (
                 <div>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }} role="none">
                     {notifications.map((n, idx) => (
-                      <li key={idx} style={{ padding: '6px 4px', borderBottom: '1px solid #eee' }}>{n}</li>
+                      <li key={idx} role="menuitem" style={{ padding: '6px 4px', borderBottom: '1px solid #eee' }}>{n}</li>
                     ))}
                   </ul>
                   <button
@@ -114,11 +134,11 @@ const BarraSuperior = () => {
         </div>
 
         <div ref={profileRef} style={{ position: 'relative', display: 'inline-flex' }}>
-          <div className="avatar-usuario" onClick={toggleProfile}>U</div>
+          <button type="button" className="avatar-usuario" onClick={toggleProfile} aria-haspopup="menu" aria-expanded={showProfile} aria-controls="dropdown-perfil" aria-label="Abrir menu do usuário">U</button>
           {showProfile && (
-            <div className={`dropdown-perfil ${showProfile ? 'show' : ''}`}>
-              <a href="/profile">Ver Perfil</a>
-              <a href="#" onClick={handleLogout}>Sair</a>
+            <div id="dropdown-perfil" className={`dropdown-perfil ${showProfile ? 'show' : ''}`} role="menu" aria-label="Menu do usuário">
+              <a href="/profile" role="menuitem">Ver Perfil</a>
+              <a href="#" role="menuitem" onClick={handleLogout}>Sair</a>
             </div>
           )}
         </div>

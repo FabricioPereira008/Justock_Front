@@ -17,6 +17,8 @@ import {
   Legend,
 } from "chart.js";
 import { Line, Doughnut } from "react-chartjs-2";
+import { getAccessibilityPrefs } from "../../utils/accessibility";
+import { srProps } from "../../utils/useA11y";
 
 ChartJS.register(
   CategoryScale,
@@ -54,6 +56,7 @@ const Relatorios = () => {
   const [raw, setRaw] = useState(null);
   const [lineMetric, setLineMetric] = useState("total");
   const [showExport, setShowExport] = useState(false);
+  const [srOpt, setSrOpt] = useState(() => getAccessibilityPrefs().toggleLeitor === true);
 
   useEffect(() => {
     mockFetch(`/api/reports/${filters.year}`)
@@ -61,6 +64,17 @@ const Relatorios = () => {
       .then(setRaw)
       .catch(() => setRaw(null));
   }, [filters.year]);
+
+  useEffect(() => {
+    const onAcc = (e) => {
+      const v = e?.detail?.toggleLeitor;
+      if (typeof v === 'boolean') setSrOpt(v);
+      else setSrOpt(getAccessibilityPrefs().toggleLeitor === true);
+    };
+    window.addEventListener('jt:accessibility-updated', onAcc);
+    onAcc({ detail: getAccessibilityPrefs() });
+    return () => window.removeEventListener('jt:accessibility-updated', onAcc);
+  }, []);
 
   const months = raw?.months ?? ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
@@ -275,27 +289,27 @@ const Relatorios = () => {
             <button className="btn-exportar" onClick={() => setShowExport(true)}>Exportar</button>
           </div>
 
-          <div className="relatorios-kpis">
+          <div className="relatorios-kpis" role={srOpt ? "region" : undefined} aria-label={srOpt ? "Indicadores principais" : undefined}>
             <div className="kpi-box azul">
               <div className="kpi-title">Total de Vendas</div>
-              <div className="kpi-value">{kpis.total.toLocaleString()}</div>
+              <div className="kpi-value" aria-live={srOpt ? "polite" : undefined} aria-atomic={srOpt ? "true" : undefined}>{kpis.total.toLocaleString()}</div>
             </div>
             <div className="kpi-box azul">
               <div className="kpi-title">Valor Médio de Venda</div>
-              <div className="kpi-value">{formatBRL(kpis.avg || 0)}</div>
+              <div className="kpi-value" aria-live={srOpt ? "polite" : undefined} aria-atomic={srOpt ? "true" : undefined}>{formatBRL(kpis.avg || 0)}</div>
             </div>
             <div className="kpi-box azul">
               <div className="kpi-title">Taxa de conversão (concl. x canc.)</div>
-              <div className="kpi-value">{(kpis.conv || 0).toFixed(2)}</div>
+              <div className="kpi-value" aria-live={srOpt ? "polite" : undefined} aria-atomic={srOpt ? "true" : undefined}>{(kpis.conv || 0).toFixed(2)}</div>
             </div>
             <div className="kpi-box azul">
               <div className="kpi-title">Categoria Destaque</div>
-              <div className="kpi-value">{kpis.destaque}</div>
+              <div className="kpi-value" aria-live={srOpt ? "polite" : undefined} aria-atomic={srOpt ? "true" : undefined}>{kpis.destaque}</div>
             </div>
           </div>
 
-          <div className="relatorios-graficos">
-            <section className="grafico grande">
+          <div className="relatorios-graficos" {...srProps(srOpt, { role: 'region', 'aria-label': 'Gráficos de desempenho' })}>
+            <section className="grafico grande" role={srOpt ? "region" : undefined} aria-labelledby={srOpt ? "sec-evolucao" : undefined}>
               <div className="section-header">
                 <div className="left">
                   <select className="line-metric" value={lineMetric} onChange={(e) => setLineMetric(e.target.value)}>
@@ -303,16 +317,17 @@ const Relatorios = () => {
                   </select>
                 </div>
               </div>
+              {srOpt && <h3 id="sec-evolucao" className="sr-only">Evolução por mês</h3>}
               <Line data={lineData} options={lineOptions} />
             </section>
 
-            <section className="grafico">
-              <div className="section-header"><h3>Top Categorias</h3></div>
+            <section className="grafico" role={srOpt ? "region" : undefined} aria-labelledby={srOpt ? "sec-top-categorias" : undefined}>
+              <div className="section-header"><h3 id="sec-top-categorias">Top Categorias</h3></div>
               <Funnel data={categoriasPercent} />
             </section>
 
-            <section className="grafico">
-              <div className="section-header"><h3>Distribuição de Vendas</h3></div>
+            <section className="grafico" role={srOpt ? "region" : undefined} aria-labelledby={srOpt ? "sec-distribuicao" : undefined}>
+              <div className="section-header"><h3 id="sec-distribuicao">Distribuição de Vendas</h3></div>
               <Doughnut data={pieData} options={pieOptions} />
             </section>
           </div>

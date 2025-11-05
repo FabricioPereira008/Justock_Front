@@ -14,6 +14,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { getAccessibilityPrefs } from "../../utils/accessibility";
+import { useSrOptimized, srProps } from "../../utils/useA11y";
 
 ChartJS.register(
   CategoryScale,
@@ -25,10 +27,12 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
+  const srOpt = useSrOptimized();
   const [totalProducts, setTotalProducts] = useState(0);
   const [lowStockProducts, setLowStockProducts] = useState(0);
   const [connectedMarketplaces, setConnectedMarketplaces] = useState(0);
   const [syncStatus, setSyncStatus] = useState("OFF");
+  const [chartFontWeight, setChartFontWeight] = useState(() => (getAccessibilityPrefs().altoContraste ? "bold" : "normal"));
 
   const [chartData, setChartData] = useState({
     labels: ["Placas-mãe", "Processadores", "Fontes", "Placas de vídeo"],
@@ -56,6 +60,18 @@ const Dashboard = () => {
   const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
+    // Ajusta fontes do Chart conforme alto contraste
+    const applyA11yToCharts = (isHigh) => {
+      try {
+        ChartJS.defaults.font = ChartJS.defaults.font || {};
+        ChartJS.defaults.font.weight = isHigh ? "bold" : "normal";
+      } catch {}
+      setChartFontWeight(isHigh ? "bold" : "normal");
+    };
+    applyA11yToCharts(getAccessibilityPrefs().altoContraste);
+    const handler = (e) => applyA11yToCharts(!!e?.detail?.altoContraste);
+    window.addEventListener('jt:accessibility-updated', handler);
+
     mockFetch("/api/total-products")
       .then((res) => res && typeof res.json === 'function' ? res.json() : res)
       .then((data) => setTotalProducts(data && typeof data.total === 'number' ? data.total : 0));
@@ -101,6 +117,7 @@ const Dashboard = () => {
     mockFetch("/api/alerts")
       .then((res) => res && typeof res.json === 'function' ? res.json() : res)
       .then((data) => setAlerts(data && Array.isArray(data.alerts) ? data.alerts : []));
+    return () => window.removeEventListener('jt:accessibility-updated', handler);
   }, []);
 
   return (
@@ -108,33 +125,43 @@ const Dashboard = () => {
       <BarraLateral />
       <main className="painel-principal">
         <BarraSuperior />
-        <div className="main-content">
-          <div className="caixas-info">
-            <div className="caixa-info azul">
+        <div className="main-content" {...srProps(srOpt, { role: 'main', 'aria-label': 'Conteúdo principal do dashboard' })}>
+          <div className="caixas-info" {...srProps(srOpt, { role: 'region', 'aria-label': 'Indicadores principais' })}>
+            <div className="caixa-info azul" {...srProps(srOpt, { role: 'group', 'aria-label': `Total de Produtos: ${totalProducts.toLocaleString()}` })}>
               <div>Total de Produtos</div>
-              <div className="valor-info">{totalProducts.toLocaleString()}</div>
+              <div className="valor-info" {...srProps(srOpt, { 'aria-live': 'polite', 'aria-atomic': 'true' })}>{totalProducts.toLocaleString()}</div>
             </div>
-            <div className="caixa-info laranja">
+            <div className="caixa-info laranja" {...srProps(srOpt, { role: 'group', 'aria-label': `Produtos em Baixa: ${lowStockProducts}` })}>
               <div>Produtos em Baixa</div>
-              <div className="valor-info">{lowStockProducts}</div>
+              <div className="valor-info" {...srProps(srOpt, { 'aria-live': 'polite', 'aria-atomic': 'true' })}>{lowStockProducts}</div>
             </div>
-            <div className="caixa-info teal-escuro">
+            <div className="caixa-info teal-escuro" {...srProps(srOpt, { role: 'group', 'aria-label': `Marketplaces Conectadas: ${connectedMarketplaces}` })}>
               <div>Marketplaces Conectadas</div>
-              <div className="valor-info">{connectedMarketplaces}</div>
+              <div className="valor-info" {...srProps(srOpt, { 'aria-live': 'polite', 'aria-atomic': 'true' })}>{connectedMarketplaces}</div>
             </div>
-            <div className="caixa-info verde-claro">
+            <div className="caixa-info verde-claro" {...srProps(srOpt, { role: 'group', 'aria-label': `Status da Sincronização: ${syncStatus}` })}>
               <div>Status da Sincronização</div>
-              <div className="valor-info">{syncStatus}</div>
+              <div className="valor-info" {...srProps(srOpt, { 'aria-live': 'polite', 'aria-atomic': 'true' })}>{syncStatus}</div>
             </div>
           </div>
 
           <div className="conteudo-painel">
-            <section className="visao-inventario">
+            <section className="visao-inventario" {...srProps(srOpt, { role: 'region', 'aria-labelledby': 'sec-visao-inventario' })}>
               <div className="cabecalho-secao">
-                <h2>Visão Geral do Inventário</h2>
+                <h2 id="sec-visao-inventario">Visão Geral do Inventário</h2>
                 <a href="#">ver mais {'>'}</a>
               </div>
-              <Bar data={chartData} options={{ responsive: true, plugins: { legend: { display: false } } }} />
+              <Bar
+                data={chartData}
+                options={{
+                  responsive: true,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { ticks: { font: { weight: chartFontWeight } } },
+                    y: { ticks: { font: { weight: chartFontWeight } } },
+                  },
+                }}
+              />
             </section>
 
             <section className="secoes-lateral">
