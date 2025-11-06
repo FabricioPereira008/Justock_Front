@@ -11,13 +11,14 @@ import { FiHome, FiBox, FiShoppingCart, FiLink, FiBarChart2, FiSettings } from "
 import { getSidebarPref } from "../../utils/appearance";
 import { getAccessibilityPrefs } from "../../utils/accessibility";
 
-let hoveredPersist = false;
-const OPEN_DELAY = 180;
-const CLOSE_DELAY = 30;
+// Delay constants para suavizar animação somente no modo misto.
+const MIX_OPEN_DELAY = 150;
+const MIX_CLOSE_DELAY = 60;
+let mixedHoverPersist = false;
 
 const BarraLateral = () => {
   const [sidebarMode, setSidebarMode] = useState(() => getSidebarPref());
-  const [expandedHover, setExpandedHover] = useState(false);
+  const [mixedExpanded, setMixedExpanded] = useState(false);
   const [highContrast, setHighContrast] = useState(() => getAccessibilityPrefs().altoContraste === true);
   const navRef = useRef(null);
   const openTimerRef = useRef(null);
@@ -57,61 +58,62 @@ const BarraLateral = () => {
 
     if (sidebarMode !== 'mista') {
       clearTimers();
-      setExpandedHover(false);
+      document.body.classList.remove('sidebar-mista-expandida');
+      setMixedExpanded(false);
       if (sidebarMode !== 'detalhada') {
         document.body.classList.remove('sidebar-detalhada');
+      } else {
+        document.body.classList.add('sidebar-detalhada');
       }
       return;
     }
 
+    document.body.classList.remove('sidebar-detalhada');
+
+    const openMixed = () => {
+      document.body.classList.add('sidebar-mista-expandida');
+      setMixedExpanded(true);
+    };
+    const closeMixed = () => {
+      document.body.classList.remove('sidebar-mista-expandida');
+      setMixedExpanded(false);
+    };
+
     const delayedOpen = () => {
       clearTimeout(closeTimerRef.current);
       openTimerRef.current = setTimeout(() => {
-        document.body.classList.add('sidebar-detalhada');
-        setExpandedHover(true);
-      }, OPEN_DELAY);
+        openMixed();
+      }, MIX_OPEN_DELAY);
     };
 
     const delayedClose = () => {
       clearTimeout(openTimerRef.current);
       closeTimerRef.current = setTimeout(() => {
-        document.body.classList.remove('sidebar-detalhada');
-        setExpandedHover(false);
-      }, CLOSE_DELAY);
+        closeMixed();
+      }, MIX_CLOSE_DELAY);
     };
 
-    const onEnter = () => { hoveredPersist = true; delayedOpen(); };
-    const onLeave = () => { hoveredPersist = false; delayedClose(); };
-    const onFocusIn = () => delayedOpen();
-    const onFocusOut = (e) => {
-      if (!nav.contains(e.relatedTarget)) delayedClose();
-    };
-
-    nav.addEventListener('mouseenter', onEnter);
-    nav.addEventListener('mouseleave', onLeave);
-    nav.addEventListener('focusin', onFocusIn);
-    nav.addEventListener('focusout', onFocusOut);
-
-    const shouldStartExpanded = hoveredPersist || nav.matches(':hover') || nav.contains(document.activeElement);
+  const onEnter = () => { mixedHoverPersist = true; delayedOpen(); };
+  const onLeave = () => { mixedHoverPersist = false; delayedClose(); };
+  nav.addEventListener('mouseenter', onEnter);
+  nav.addEventListener('mouseleave', onLeave);
+  const shouldStartExpanded = mixedHoverPersist || nav.matches(':hover');
     if (shouldStartExpanded) {
       document.body.classList.add('sidebar-no-transition');
-      document.body.classList.add('sidebar-detalhada');
-      setExpandedHover(true);
+      openMixed();
       setTimeout(() => {
         document.body.classList.remove('sidebar-no-transition');
-      }, 80);
+      }, 90);
     }
 
     return () => {
       clearTimers();
       nav.removeEventListener('mouseenter', onEnter);
       nav.removeEventListener('mouseleave', onLeave);
-      nav.removeEventListener('focusin', onFocusIn);
-      nav.removeEventListener('focusout', onFocusOut);
     };
   }, [sidebarMode]);
 
-  const isExpanded = sidebarMode === 'detalhada' || (sidebarMode === 'mista' && expandedHover);
+  const isExpanded = sidebarMode === 'detalhada' || (sidebarMode === 'mista' && mixedExpanded);
   const [logoShowsExpanded, setLogoShowsExpanded] = useState(isExpanded);
 
   useEffect(() => {

@@ -21,7 +21,8 @@ html.painel-fonte-grande { font-size: 112.5%; }
   font-size: 1em;
 }
 
-.sidebar-detalhada .barra_lateral {
+.sidebar-detalhada .barra_lateral,
+.sidebar-mista-expandida .barra_lateral {
   width: 184px !important;
   flex: 0 0 184px !important;
   align-items: stretch;
@@ -29,14 +30,16 @@ html.painel-fonte-grande { font-size: 112.5%; }
 }
 
 
-.sidebar-detalhada .barra_lateral-item {
+.sidebar-detalhada .barra_lateral-item,
+.sidebar-mista-expandida .barra_lateral-item {
   justify-content: flex-start;
   gap: 12px;
   padding: 20px 12px 20px 18px;
   line-height: 1;
 }
 
-.sidebar-detalhada .barra_lateral-item img {
+.sidebar-detalhada .barra_lateral-item img,
+.sidebar-mista-expandida .barra_lateral-item img {
   width: 40px;
   height: 40px;
 }
@@ -51,10 +54,12 @@ html.painel-fonte-grande { font-size: 112.5%; }
     transform .54s cubic-bezier(0.22, 1, 0.36, 1) .04s;
   will-change: opacity, max-width, transform;
 }
-.sidebar-detalhada .barra_lateral-texto {
+.sidebar-detalhada .barra_lateral-texto,
+.sidebar-mista-expandida .barra_lateral-texto {
   opacity: 1; max-width: 160px; pointer-events: auto; transform: translateX(0);
 }
-.sidebar-detalhada .barra_lateral-item.active .barra_lateral-texto { color: #ffffff; }
+.sidebar-detalhada .barra_lateral-item.active .barra_lateral-texto,
+.sidebar-mista-expandida .barra_lateral-item.active .barra_lateral-texto { color: #ffffff; }
 
 body.sidebar-no-transition .barra_lateral {
   transition: none !important;

@@ -39,12 +39,14 @@
   transition: transform .54s cubic-bezier(0.22, 1, 0.36, 1), width .54s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.sidebar-detalhada .barra_lateral-logo-area {
+.sidebar-detalhada .barra_lateral-logo-area,
+.sidebar-mista-expandida .barra_lateral-logo-area {
   justify-content: center;
   padding: 20px 0;
 }
 
-.sidebar-detalhada .barra_lateral-logo-img {
+.sidebar-detalhada .barra_lateral-logo-img,
+.sidebar-mista-expandida .barra_lateral-logo-img {
   width: 112px;
   transform: translateX(-1px);
 }

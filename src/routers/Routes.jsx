@@ -13,6 +13,7 @@ import Pedidos from "../pages/dashboard/Pedidos.jsx";
 import Conexoes from "../pages/dashboard/Conexoes.jsx";
 import Relatorios from "../pages/dashboard/Relatorios.jsx";
 import Configuracoes from "../pages/dashboard/Configuracoes.jsx";
+import DashboardLayout from "../components/dashboard/DashboardLayout.jsx";
 import ErrorBoundary from "../components/common/ErrorBoundary.jsx";
 import { applyAppearance } from "../utils/appearance.js";
 
@@ -53,12 +54,14 @@ const Routs = () => {
             }
           />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
-          <Route path="/conexoes" element={<ErrorBoundary><Conexoes /></ErrorBoundary>} />
-          <Route path="/produtos" element={<ErrorBoundary><Produtos /></ErrorBoundary>} />
-          <Route path="/pedidos" element={<ErrorBoundary><Pedidos /></ErrorBoundary>} />
-          <Route path="/relatorios" element={<ErrorBoundary><Relatorios /></ErrorBoundary>} />
-          <Route path="/settings" element={<ErrorBoundary><Configuracoes /></ErrorBoundary>} />
+          <Route element={<DashboardLayout />}> 
+            <Route path="/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
+            <Route path="/conexoes" element={<ErrorBoundary><Conexoes /></ErrorBoundary>} />
+            <Route path="/produtos" element={<ErrorBoundary><Produtos /></ErrorBoundary>} />
+            <Route path="/pedidos" element={<ErrorBoundary><Pedidos /></ErrorBoundary>} />
+            <Route path="/relatorios" element={<ErrorBoundary><Relatorios /></ErrorBoundary>} />
+            <Route path="/settings" element={<ErrorBoundary><Configuracoes /></ErrorBoundary>} />
+          </Route>
         </Routes>
       </div>
       </DashboardScope>

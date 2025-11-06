@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import mockFetch from "../../mocks/dashboardMocks";
 import DatePicker from "react-datepicker";
-import BarraLateral from "../../components/dashboard/BarraLateral";
-import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/pedidos.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -165,11 +163,7 @@ const Pedidos = () => {
   };
 
   return (
-    <div className="painel-container">
-      <BarraLateral />
-      <main className="painel-principal">
-        <BarraSuperior />
-        <div className="main-content" {...srProps(srOpt, { role: 'main', 'aria-label': 'Lista de pedidos' })}>
+    <div {...srProps(srOpt, { role: 'main', 'aria-label': 'Lista de pedidos' })}>
           <div className="pedidos-header">
             <div className="filter-group">
               <label htmlFor="filtro-pedido">Nº Pedido:</label>
@@ -281,9 +275,7 @@ const Pedidos = () => {
               </button>
             </div>
           </div>
-        </div>
-      </main>
-
+      
       {modalOpen && selectedOrder && (
         <div style={{
           position: "fixed",
@@ -369,7 +361,7 @@ const Pedidos = () => {
             </div>
           </div>
         </div>
-      )}
+  )}
 
       {addOpen && (
         <div className="modal-overlay">

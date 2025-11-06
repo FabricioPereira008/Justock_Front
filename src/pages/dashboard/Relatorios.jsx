@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import BarraLateral from "../../components/dashboard/BarraLateral";
-import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import mockFetch from "../../mocks/dashboardMocks";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/relatorios.css";
@@ -308,11 +306,7 @@ const Relatorios = () => {
   };
 
   return (
-    <div className="painel-container">
-      <BarraLateral />
-      <main className="painel-principal">
-        <BarraSuperior />
-        <div className="main-content">
+    <div>
 
           <div className="relatorios-filtros">
             <div className="filtros-centro">
@@ -378,9 +372,7 @@ const Relatorios = () => {
               <Doughnut data={pieData} options={pieOptions} />
             </section>
           </div>
-        </div>
-      </main>
-
+      
       {showExport && (
         <div className="modal-sobreposicao">
           <div className="modal-conteudo export-modal">

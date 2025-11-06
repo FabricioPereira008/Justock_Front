@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FiCheckCircle, FiAlertTriangle, FiXCircle } from "react-icons/fi";
-import BarraLateral from "../../components/dashboard/BarraLateral";
-import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 
 import mockFetch from "../../mocks/dashboardMocks";
@@ -163,11 +161,7 @@ const Dashboard = () => {
   }, [isDark, chartFontWeight]);
 
   return (
-    <div className="painel-container">
-      <BarraLateral />
-      <main className="painel-principal">
-        <BarraSuperior />
-        <div className="main-content" {...srProps(srOpt, { role: 'main', 'aria-label': 'Conteúdo principal do dashboard' })}>
+    <div {...srProps(srOpt, { role: 'main', 'aria-label': 'Conteúdo principal do dashboard' })}>
           <div className="caixas-info" {...srProps(srOpt, { role: 'region', 'aria-label': 'Indicadores principais' })}>
             <div className="caixa-info azul" {...srProps(srOpt, { role: 'group', 'aria-label': `Total de Produtos: ${totalProducts.toLocaleString()}` })}>
               <div>Total de Produtos</div>
@@ -228,8 +222,6 @@ const Dashboard = () => {
               </div>
             </section>
           </div>
-        </div>
-      </main>
     </div>
   );
 };

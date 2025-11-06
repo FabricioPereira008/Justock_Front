@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import BarraLateral from "../../components/dashboard/BarraLateral";
-import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/conexoes.css";
 import { notifyError } from "../../utils/notify";
 
@@ -45,11 +43,7 @@ const Conexoes = () => {
   // Exibiremos nomes em caixa ao invés de logos (restrições de uso de marca encontradas nas documentações oficiais)
   
   return (
-    <div className="painel-container">
-      <BarraLateral />
-      <main className="painel-principal">
-        <BarraSuperior />
-        <div className="main-content conexoes_pagina" {...srProps(srOpt, { role: 'main', 'aria-label': 'Conexões com marketplaces' })}>
+    <div className="conexoes_pagina" {...srProps(srOpt, { role: 'main', 'aria-label': 'Conexões com marketplaces' })}>
           <div className="conexoes_cabecalho">
             <h2>Conexões com Marketplaces</h2>
           </div>
@@ -82,8 +76,6 @@ const Conexoes = () => {
               ))
             )}
           </div>
-        </div>
-      </main>
     </div>
   );
 };

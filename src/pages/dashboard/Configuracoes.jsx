@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FiSun, FiMoon } from "react-icons/fi";
-import BarraLateral from "../../components/dashboard/BarraLateral";
-import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/configuracoes.css";
 import { getFontPref, getSidebarPref, setFontPref, setSidebarPref, getThemePref, setThemePref } from "../../utils/appearance";
@@ -111,11 +109,7 @@ const Configuracoes = () => {
   const updateAcess = (key) => setAcess(prev => ({ ...prev, [key]: !prev[key] }));
 
   return (
-    <div className="painel-container">
-      <BarraLateral />
-      <main className="painel-principal">
-        <BarraSuperior />
-        <div className="main-content pagina-configuracoes" {...srProps(srOpt, { role: 'main', 'aria-label': 'Configurações da conta' })}>
+    <div className="pagina-configuracoes" {...srProps(srOpt, { role: 'main', 'aria-label': 'Configurações da conta' })}>
           <h2 className="conf-titulo">Configurações</h2>
 
           <div className="conf-grade">
@@ -220,8 +214,6 @@ const Configuracoes = () => {
           <div className="conf-acoes">
             <button className="conf-btn-primario" onClick={handleSave} {...srProps(srOpt, { 'aria-label': 'Salvar preferências' })}>Salvar</button>
           </div>
-        </div>
-      </main>
       {toast && (
         <div className="conf-toast" role="status" aria-live="polite">{toast}</div>
       )}

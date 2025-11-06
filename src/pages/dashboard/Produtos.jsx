@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import mockFetch from "../../mocks/dashboardMocks";
-import BarraLateral from "../../components/dashboard/BarraLateral";
-import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/produtos.css";
 import { useSrOptimized, srProps } from "../../utils/useA11y";
@@ -239,11 +237,7 @@ const Produtos = () => {
   };
 
   return (
-    <div className="painel-container">
-      <BarraLateral />
-      <main className="painel-principal">
-        <BarraSuperior />
-        <div className="main-content" {...srProps(srOpt, { role: 'main', 'aria-label': 'Lista de produtos' })}>
+    <div {...srProps(srOpt, { role: 'main', 'aria-label': 'Lista de produtos' })}>
           <div className="cabecalho-produtos" {...srProps(srOpt, { role: 'region', 'aria-label': 'Filtros de produtos' })}>
             <div className="grupo-filtro">
               <label htmlFor="filtro-categoria">Categoria:</label>
@@ -351,8 +345,6 @@ const Produtos = () => {
               <button className="page-button" onClick={goToNextPage} disabled={currentPage === totalPages} {...srProps(srOpt, { 'aria-label': 'Próxima página' })}>{'>'}</button>
             </div>
           </div>
-        </div>
-      </main>
       <ModalAdicionarProduto
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
