@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import BarraLateral from "../../components/dashboard/BarraLateral";
 import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/conexoes.css";
+import { notifyError } from "../../utils/notify";
 
-import ML from "../../assets/mercadolivre.png";
-import Shopee from "../../assets/shopee.png";
-import Amazon from "../../assets/amazon.png";
 import mockFetch from "../../mocks/dashboardMocks";
 import { useSrOptimized, srProps } from "../../utils/useA11y";
 
@@ -44,12 +42,8 @@ const Conexoes = () => {
       .finally(() => setCarregando(false));
   }, []);
 
-  const logo_map = {
-    mercado_livre: ML,
-    shopee: Shopee,
-    amazon: Amazon,
-  };
-
+  // Exibiremos nomes em caixa ao invés de logos (restrições de uso de marca encontradas nas documentações oficiais)
+  
   return (
     <div className="painel-container">
       <BarraLateral />
@@ -66,12 +60,12 @@ const Conexoes = () => {
             ) : (
               marketplaces.map((mkt) => (
                 <div className="conexoes_card" key={mkt.id} {...srProps(srOpt, { role: 'group', 'aria-label': `${mkt.name}. ${mkt.connected ? 'Conectado' : 'Desconectado'}` })}>
-                  <img src={logo_map[mkt.id]} alt={mkt.name} className="conexoes_logo" />
+                  <div className="conexoes_logo_text" aria-hidden="true">{mkt.name}</div>
                   <div className="conexoes_card_corpo">
                     {mkt.connected ? (
                       <div className="conexoes_status conexoes_status_conectado" {...srProps(srOpt, { 'aria-label': 'Status: Conectado' })}>Conectado</div>
                     ) : (
-                      <button className="conexoes_status conexoes_status_conectar" style={{border: 'none', cursor: 'pointer'}} onClick={() => alert('Funcionalidade de conectar ainda não implementada.')} {...srProps(srOpt, { 'aria-label': `Conectar ${mkt.name}` })}>Conectar</button>
+                      <button className="conexoes_status conexoes_status_conectar" style={{border: 'none', cursor: 'pointer'}} onClick={() => notifyError('Funcionalidade de conectar ainda não implementada.')} {...srProps(srOpt, { 'aria-label': `Conectar ${mkt.name}` })}>Conectar</button>
                     )}
                     {mkt.connected ? (
                       <div className="conexoes_dados">

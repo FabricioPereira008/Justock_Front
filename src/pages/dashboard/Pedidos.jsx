@@ -7,12 +7,15 @@ import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/pedidos.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSrOptimized, srProps } from "../../utils/useA11y";
+import { notifySuccess, notifyError } from "../../utils/notify";
 
 const Pedidos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [newOrder, setNewOrder] = useState({ dataEmissao: null, dataEntrega: null, marketplace: "", pagamento: "Dinheiro", status: "Pendente" });
   const [observation, setObservation] = useState("");
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -104,8 +107,48 @@ const Pedidos = () => {
   };
 
   const saveObservation = () => {
-    alert(`Observação salva para o pedido #${selectedOrder.id}: ${observation}`);
+    notifySuccess(`Observação salva para o pedido #${selectedOrder.id}.`);
     closeModal();
+  };
+
+  // Utilities
+  const toBR = (d) => {
+    if (!d) return "";
+    const dd = new Date(d);
+    if (Number.isNaN(dd.getTime())) return "";
+    const day = String(dd.getDate()).padStart(2, '0');
+    const mon = String(dd.getMonth() + 1).padStart(2, '0');
+    const yr = dd.getFullYear();
+    return `${day}/${mon}/${yr}`;
+  };
+  const nextOrderId = () => {
+    const ids = orders.map(o => Number(o.id) || 0);
+    const max = ids.length ? Math.max(...ids) : 0;
+    return max + 1;
+  };
+  const openAdd = () => {
+    setNewOrder({ dataEmissao: null, dataEntrega: null, marketplace: "", pagamento: "Dinheiro", status: "Pendente" });
+    setAddOpen(true);
+  };
+  const cancelAdd = () => setAddOpen(false);
+  const confirmAdd = () => {
+    if (!newOrder.dataEmissao) {
+      notifyError('Data de emissão é obrigatória.');
+      return;
+    }
+    const order = {
+      id: nextOrderId(),
+      dataEmissao: toBR(newOrder.dataEmissao),
+      dataEntrega: newOrder.dataEntrega ? toBR(newOrder.dataEntrega) : "",
+      marketplace: newOrder.marketplace || "-",
+      pagamento: newOrder.pagamento,
+      status: newOrder.status,
+    };
+    const updated = [order, ...orders];
+    setOrders(updated);
+    setTimeout(() => applyFilters(), 0);
+  setAddOpen(false);
+  notifySuccess(`Pedido #${order.id} adicionado.`);
   };
 
   const goToPreviousPage = () => {
@@ -227,6 +270,7 @@ const Pedidos = () => {
           </div>
 
           <div className="pedidos-footer">
+            <button className="add-button" onClick={openAdd} {...srProps(srOpt, { 'aria-label': 'Adicionar pedido' })}>Adicionar Pedido</button>
             <div className="pagination">
               <button className="page-button" onClick={goToPreviousPage} disabled={currentPage === 1} {...srProps(srOpt, { 'aria-label': 'Página anterior' })}>
                 {"<"}
@@ -322,6 +366,63 @@ const Pedidos = () => {
               >
                 Salvar Observação
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {addOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content" role="dialog" aria-modal="true" aria-label="Adicionar pedido">
+            <h2>Novo Pedido</h2>
+            <div className="form-group">
+              <label>Nº do pedido</label>
+              <input type="text" value={nextOrderId()} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Data de emissão (obrigatória)</label>
+              <DatePicker
+                selected={newOrder.dataEmissao}
+                onChange={(d) => setNewOrder(v => ({ ...v, dataEmissao: d }))}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Selecione a data"
+              />
+            </div>
+            <div className="form-group">
+              <label>Data de entrega (opcional)</label>
+              <DatePicker
+                selected={newOrder.dataEntrega}
+                onChange={(d) => setNewOrder(v => ({ ...v, dataEntrega: d }))}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Selecione a data"
+                isClearable
+              />
+            </div>
+            <div className="form-group">
+              <label>Marketplace</label>
+              <input type="text" value={newOrder.marketplace} onChange={(e) => setNewOrder(v => ({ ...v, marketplace: e.target.value }))} placeholder="Ex.: Mercado Livre" />
+            </div>
+            <div className="form-group">
+              <label>Pagamento</label>
+              <select value={newOrder.pagamento} onChange={(e) => setNewOrder(v => ({ ...v, pagamento: e.target.value }))}>
+                <option>Dinheiro</option>
+                <option>Cartão de crédito</option>
+                <option>Boleto</option>
+                <option>Pix</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Status atual</label>
+              <select value={newOrder.status} onChange={(e) => setNewOrder(v => ({ ...v, status: e.target.value }))}>
+                <option>Pendente</option>
+                <option>Entregue</option>
+                <option>Cancelado</option>
+                <option>Reembolsado</option>
+              </select>
+            </div>
+            <div className="modal-buttons">
+              <button className="botao-cancelar" onClick={cancelAdd}>Cancelar</button>
+              <button className="botao-adicionar" onClick={confirmAdd}>Adicionar Pedido</button>
             </div>
           </div>
         </div>

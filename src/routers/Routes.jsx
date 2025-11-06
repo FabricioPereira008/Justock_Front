@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useLayoutEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import BarraNavegacao from "../pages/home/barra_navegacao.jsx";
 import TopoHome from "../pages/home/topo_home.jsx";
 import RecursosDisponiveis from "../pages/home/recursos_home.jsx";
@@ -14,6 +14,20 @@ import Conexoes from "../pages/dashboard/Conexoes.jsx";
 import Relatorios from "../pages/dashboard/Relatorios.jsx";
 import Configuracoes from "../pages/dashboard/Configuracoes.jsx";
 import ErrorBoundary from "../components/common/ErrorBoundary.jsx";
+import { applyAppearance } from "../utils/appearance.js";
+
+const DashboardScope = ({ children }) => {
+  const location = useLocation();
+  useLayoutEffect(() => {
+    const paths = ["/dashboard", "/conexoes", "/produtos", "/pedidos", "/relatorios", "/settings"]; 
+    const isDash = paths.some(p => location.pathname.startsWith(p));
+    if (typeof document !== 'undefined') {
+      document.body.classList.toggle('dashboard-scope', isDash);
+    }
+    try { applyAppearance(); } catch { /* para aqui */ }
+  }, [location]);
+  return children;
+};
 
 const Routs = () => {
   const [planosOpen, setPlanosOpen] = useState(false);
@@ -22,6 +36,7 @@ const Routs = () => {
 
   return (
     <Router>
+      <DashboardScope>
       <div className="app-container">
         <Routes>
           <Route
@@ -46,6 +61,7 @@ const Routs = () => {
           <Route path="/settings" element={<ErrorBoundary><Configuracoes /></ErrorBoundary>} />
         </Routes>
       </div>
+      </DashboardScope>
     </Router>
   );
 };

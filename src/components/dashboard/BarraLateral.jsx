@@ -11,8 +11,9 @@ import { FiHome, FiBox, FiShoppingCart, FiLink, FiBarChart2, FiSettings } from "
 import { getSidebarPref } from "../../utils/appearance";
 import { getAccessibilityPrefs } from "../../utils/accessibility";
 
-// Persist hover state across route changes to avoid flicker in 'mista'
 let hoveredPersist = false;
+const OPEN_DELAY = 180;
+const CLOSE_DELAY = 30;
 
 const BarraLateral = () => {
   const [sidebarMode, setSidebarMode] = useState(() => getSidebarPref());
@@ -21,6 +22,8 @@ const BarraLateral = () => {
   const navRef = useRef(null);
   const openTimerRef = useRef(null);
   const closeTimerRef = useRef(null);
+  const logoSwapTimerRef = useRef(null);
+  const logoResizeObserverRef = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
@@ -39,23 +42,19 @@ const BarraLateral = () => {
       else setHighContrast(getAccessibilityPrefs().altoContraste === true);
     };
     window.addEventListener('jt:accessibility-updated', onAcc);
-    // init
     onAcc({ detail: getAccessibilityPrefs() });
     return () => window.removeEventListener('jt:accessibility-updated', onAcc);
   }, []);
 
-  // Hover/focus expand behavior for 'mista': temporarily add/remove 'sidebar-detalhada'
   useLayoutEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
 
-    // Helper to clear any pending timers
     const clearTimers = () => {
       if (openTimerRef.current) { clearTimeout(openTimerRef.current); openTimerRef.current = null; }
       if (closeTimerRef.current) { clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
     };
 
-    // If leaving 'mista' mode, ensure class is properly removed (unless detalhada)
     if (sidebarMode !== 'mista') {
       clearTimers();
       setExpandedHover(false);
@@ -70,7 +69,7 @@ const BarraLateral = () => {
       openTimerRef.current = setTimeout(() => {
         document.body.classList.add('sidebar-detalhada');
         setExpandedHover(true);
-      }, 120); // slight delay to avoid aggressive flicker
+      }, OPEN_DELAY);
     };
 
     const delayedClose = () => {
@@ -78,7 +77,7 @@ const BarraLateral = () => {
       closeTimerRef.current = setTimeout(() => {
         document.body.classList.remove('sidebar-detalhada');
         setExpandedHover(false);
-      }, 140); // small grace period to allow pointer to move inside
+      }, CLOSE_DELAY);
     };
 
     const onEnter = () => { hoveredPersist = true; delayedOpen(); };
@@ -93,7 +92,6 @@ const BarraLateral = () => {
     nav.addEventListener('focusin', onFocusIn);
     nav.addEventListener('focusout', onFocusOut);
 
-    // Initial paint: if already hovered/focused recently, expand without transition to avoid flash
     const shouldStartExpanded = hoveredPersist || nav.matches(':hover') || nav.contains(document.activeElement);
     if (shouldStartExpanded) {
       document.body.classList.add('sidebar-no-transition');
@@ -114,13 +112,68 @@ const BarraLateral = () => {
   }, [sidebarMode]);
 
   const isExpanded = sidebarMode === 'detalhada' || (sidebarMode === 'mista' && expandedHover);
+  const [logoShowsExpanded, setLogoShowsExpanded] = useState(isExpanded);
+
+  useEffect(() => {
+    if (logoSwapTimerRef.current) {
+      clearTimeout(logoSwapTimerRef.current);
+      logoSwapTimerRef.current = null;
+    }
+
+    if (isExpanded) {
+      setLogoShowsExpanded(true);
+      if (logoResizeObserverRef.current) {
+        logoResizeObserverRef.current.disconnect();
+        logoResizeObserverRef.current = null;
+      }
+      return () => {};
+    }
+
+    const navEl = navRef.current;
+    if (!navEl) {
+      logoSwapTimerRef.current = setTimeout(() => {
+        setLogoShowsExpanded(false);
+        logoSwapTimerRef.current = null;
+      }, 420);
+      return () => {
+        if (logoSwapTimerRef.current) {
+          clearTimeout(logoSwapTimerRef.current);
+          logoSwapTimerRef.current = null;
+        }
+      };
+    }
+
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const w = entry.contentRect.width;
+        if (w <= 74) {
+          setLogoShowsExpanded(false);
+          observer.disconnect();
+          logoResizeObserverRef.current = null;
+        }
+      }
+    });
+    observer.observe(navEl);
+    logoResizeObserverRef.current = observer;
+
+    return () => {
+      if (logoResizeObserverRef.current) {
+        logoResizeObserverRef.current.disconnect();
+        logoResizeObserverRef.current = null;
+      }
+      if (logoSwapTimerRef.current) {
+        clearTimeout(logoSwapTimerRef.current);
+        logoSwapTimerRef.current = null;
+      }
+    };
+  }, [isExpanded]);
   const linkClass = ({ isActive }) => (isActive ? "barra_lateral-item active" : "barra_lateral-item");
 
   return (
   <nav className="barra_lateral" ref={navRef} aria-label="Menu principal">
       <NavLink to="/dashboard" className="barra_lateral-logo-area">
         <img
-          src={isExpanded ? (highContrast ? logoTitleContrast : logoDetailed) : (highContrast ? logoContrast : logoCompact)}
+          src={logoShowsExpanded ? (highContrast ? logoTitleContrast : logoDetailed) : (highContrast ? logoContrast : logoCompact)}
           alt="Logo Justock"
           className="barra_lateral-logo-img"
         />

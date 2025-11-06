@@ -18,7 +18,16 @@ const ModalAdicionarProduto = ({ isOpen, onClose, onAddProduct, nextId }) => {
     customMarca: ""
   });
 
-  const categorias = ["Placas-mãe", "Processadores", "Placas de vídeo", "Memórias RAM", "Armazenamento"];
+  const categorias = [
+    "Placas-mãe",
+    "Processadores",
+    "Placas de vídeo",
+    "Memórias RAM",
+    "Armazenamento",
+    "Fontes",
+    "Coolers",
+    "Outros"
+  ];
   const marcas = ["ASUS", "NVIDIA", "AMD", "MSI", "Intel", "Corsair", "Samsung", "Gigabyte", "Kingston", "WD", "G.Skill", "Seagate", "Outras"];
 
   const handleChange = (e) => {
@@ -123,9 +132,6 @@ const Produtos = () => {
   const itemsPerPage = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const srOpt = useSrOptimized();
-
-  const initialProducts = [/* fallback kept inline for now */];
-
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -134,7 +140,6 @@ const Produtos = () => {
   }, [products]);
 
   useEffect(() => {
-    // fetch products from mock API
     mockFetch('/api/produtos')
       .then(res => res && typeof res.json === 'function' ? res.json() : res)
       .then(data => {
@@ -145,7 +150,6 @@ const Produtos = () => {
         }
       })
       .catch(() => {
-        // fallback: tenta pegar do mock centralizado mesmo em caso de erro
         if (typeof mockFetch === 'function') {
           mockFetch('/api/produtos').then(res => res && typeof res.json === 'function' ? res.json() : res).then(data => setProducts(data && data.products ? data.products : []));
         } else {
@@ -163,7 +167,6 @@ const Produtos = () => {
 
   const handleAddProduct = (newProduct) => {
     setProducts([...products, newProduct]);
-    // fetch('/api/produtos', { method: 'POST', body: JSON.stringify(newProduct) });
   };
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -256,6 +259,9 @@ const Produtos = () => {
                 <option>Placas de vídeo</option>
                 <option>Memórias RAM</option>
                 <option>Armazenamento</option>
+                <option>Fontes</option>
+                <option>Coolers</option>
+                <option>Outros</option>
               </select>
             </div>
             <div className="grupo-filtro">

@@ -135,7 +135,7 @@
   padding: 6px 10px;
   border: 1px solid #ddd;
   background: #e8650e;
-  border-radius: 4px;
+  background: #f5f5f5;
   cursor: pointer;
   font-size: 20px;
   font-weight: bold
@@ -176,7 +176,6 @@
   transform: scale(1.2);
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;

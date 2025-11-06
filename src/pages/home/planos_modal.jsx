@@ -39,7 +39,7 @@ const PlanosModal = ({ open, onClose }) => {
         <button className="fechar-planos" aria-label="Fechar" onClick={onClose}>×</button>
         <h1 className="titulo-planos">Nossos Planos</h1>
         <div className="cartoes-planos">
-          {planos.map((plano, idx) => (
+          {planos.map((plano) => (
             <div
               key={plano.nome}
               className={`cartao-plano${plano.recomendado ? " recomendado" : ""}`}

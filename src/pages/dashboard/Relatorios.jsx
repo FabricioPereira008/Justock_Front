@@ -18,6 +18,7 @@ import {
 } from "chart.js";
 import { Line, Doughnut } from "react-chartjs-2";
 import { getAccessibilityPrefs } from "../../utils/accessibility";
+import { getThemePref } from "../../utils/appearance";
 import { srProps } from "../../utils/useA11y";
 
 ChartJS.register(
@@ -45,6 +46,9 @@ const COLORS = {
   orange: "#f97316",
   darkTeal: "#0f3d3e",
 };
+const GREYS = ["#9aa6b2", "#6b7785", "#3e4b59"];
+
+const DEFAULT_MONTHS = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
 function sum(arr) { return arr.reduce((a, b) => a + b, 0); }
 function formatBRL(v) {
@@ -57,6 +61,9 @@ const Relatorios = () => {
   const [lineMetric, setLineMetric] = useState("total");
   const [showExport, setShowExport] = useState(false);
   const [srOpt, setSrOpt] = useState(() => getAccessibilityPrefs().toggleLeitor === true);
+  const [isDark, setIsDark] = useState(() => {
+    try { return getThemePref() === 'dark'; } catch { return false; }
+  });
 
   useEffect(() => {
     mockFetch(`/api/reports/${filters.year}`)
@@ -76,7 +83,18 @@ const Relatorios = () => {
     return () => window.removeEventListener('jt:accessibility-updated', onAcc);
   }, []);
 
-  const months = raw?.months ?? ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+  // Tema: reagir à troca para ajustar cores dos gráficos
+  useEffect(() => {
+    const handleAppearance = (e) => {
+      if (e?.detail?.theme) setIsDark(e.detail.theme === 'dark');
+  else if (document?.body) setIsDark(document.body.getAttribute('data-theme') === 'dark');
+    };
+    window.addEventListener('jt:appearance-updated', handleAppearance);
+    handleAppearance();
+    return () => window.removeEventListener('jt:appearance-updated', handleAppearance);
+  }, []);
+
+  const months = useMemo(() => (raw?.months && Array.isArray(raw.months) ? raw.months : DEFAULT_MONTHS), [raw]);
 
   const agg = useMemo(() => {
     if (!raw) return null;
@@ -106,8 +124,6 @@ const Relatorios = () => {
 
     const avg = totals.completed > 0 ? totals.revenue / totals.completed : 0;
     const conv = (totals.completed + totals.canceled) > 0 ? totals.completed / (totals.completed + totals.canceled) : 0;
-
-    // Categoria destaque
     const categories = (raw.categories || []).slice().sort((a,b) => {
       const av = (typeof a.percent === 'number') ? a.percent : a.sales;
       const bv = (typeof b.percent === 'number') ? b.percent : b.sales;
@@ -149,8 +165,8 @@ const Relatorios = () => {
       return { label, data: comp, borderColor: color, backgroundColor: color, tension: 0.35 };
     };
 
-    const sets = [];
-    const colors = [COLORS.blue, COLORS.orange, COLORS.green];
+  const sets = [];
+  const colors = isDark ? GREYS : [COLORS.blue, COLORS.orange, COLORS.green];
     const names = ["Amazon", "Shopee", "Mercado Livre"];
 
     if (filters.marketplace === "Todas as lojas") {
@@ -160,46 +176,64 @@ const Relatorios = () => {
       });
     } else {
       const m = agg.byMkt[filters.marketplace];
-      const color = filters.marketplace === "Amazon" ? COLORS.blue : filters.marketplace === "Shopee" ? COLORS.orange : COLORS.green;
+      const idx = names.indexOf(filters.marketplace);
+      const color = (isDark ? GREYS : [COLORS.blue, COLORS.orange, COLORS.green])[Math.max(0, idx)];
       sets.push(buildDataset(filters.marketplace, color, m.completed, m.canceled, m.revenue));
     }
 
     return { labels: months, datasets: sets };
-  }, [agg, months, filters.marketplace, lineMetric]);
+  }, [agg, months, filters.marketplace, lineMetric, isDark]);
 
-  const lineOptions = useMemo(() => ({
-    responsive: true,
-    scales: {
-      y: {
-        min: lineMetric === "conv" ? 0 : undefined,
-        max: lineMetric === "conv" ? 1 : undefined,
-        ticks: {
-          callback: (val) => lineMetric === "conv" ? Number(val).toFixed(2) : val,
+  const lineOptions = useMemo(() => {
+    const text = isDark ? '#e5eef7' : '#1a3a3a';
+    const grid = isDark ? 'rgba(229, 238, 247, 0.12)' : 'rgba(26, 58, 58, 0.12)';
+    const border = isDark ? 'rgba(229, 238, 247, 0.22)' : 'rgba(26,58,58,0.22)';
+    const tooltipBg = isDark ? 'rgba(15, 22, 32, 0.95)' : '#ffffff';
+    const tooltipColor = text;
+    return ({
+      responsive: true,
+      scales: {
+        x: {
+          ticks: { color: text },
+          grid: { color: grid, borderColor: border },
         },
-      }
-    },
-    plugins: {
-      legend: { position: "top" },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => {
-            const v = ctx.parsed.y;
-            if (lineMetric === "avg") return `${ctx.dataset.label}: ${formatBRL(v)}`;
-            if (lineMetric === "conv") return `${ctx.dataset.label}: ${Number(v).toFixed(2)}`;
-            return `${ctx.dataset.label}: ${v.toLocaleString()}`;
+        y: {
+          min: lineMetric === 'conv' ? 0 : undefined,
+          max: lineMetric === 'conv' ? 1 : undefined,
+          ticks: {
+            color: text,
+            callback: (val) => lineMetric === 'conv' ? Number(val).toFixed(2) : val,
+          },
+          grid: { color: grid, borderColor: border },
+        },
+      },
+      plugins: {
+        legend: { position: 'top', labels: { color: text } },
+        tooltip: {
+          backgroundColor: tooltipBg,
+          titleColor: tooltipColor,
+          bodyColor: tooltipColor,
+          borderColor: grid,
+          borderWidth: 1,
+          callbacks: {
+            label: (ctx) => {
+              const v = ctx.parsed.y;
+              if (lineMetric === 'avg') return `${ctx.dataset.label}: ${formatBRL(v)}`;
+              if (lineMetric === 'conv') return `${ctx.dataset.label}: ${Number(v).toFixed(2)}`;
+              return `${ctx.dataset.label}: ${v.toLocaleString()}`;
+            }
           }
         }
-      }
-    },
-    elements: { point: { radius: 2 } }
-  }), [lineMetric]);
+      },
+      elements: { point: { radius: 2 } },
+    });
+  }, [lineMetric, isDark]);
 
   // Top categorias - usamos barras horizontais (aproximação do funil sem dependências extras)
   // Categorias para funil (percentuais 0-100)
   const categoriasPercent = useMemo(() => {
     const cats = agg?.categories || [];
     if (!cats.length) return [];
-    // Aceita mocks antigos (sales) e novos (percent)
     const values = cats.map(c => typeof c.percent === 'number' ? c.percent : c.sales);
     const total = values.reduce((a,b)=>a+b,0) || 1;
     // Normaliza para 100 se necessário
@@ -216,45 +250,58 @@ const Relatorios = () => {
       labels: names,
       datasets: [{
         data: values,
-        backgroundColor: [COLORS.blue, COLORS.orange, COLORS.green],
+        backgroundColor: isDark ? ["#9aa6b2", "#6b7785", "#3e4b59"] : [COLORS.blue, COLORS.orange, COLORS.green],
         borderColor: "#ffffff",
       }]
     };
-  }, [agg]);
-  const pieOptions = useMemo(() => ({
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom",
-        labels: {
-          generateLabels: (chart) => {
-            const dataset = chart.data.datasets[0] || { data: [] };
-            const total = dataset.data.reduce((a,b)=>a+b,0) || 1;
-            return chart.data.labels.map((label, i) => {
-              const value = dataset.data[i] || 0;
-              const pct = Math.round((value/total)*100);
-              const colorArr = Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor : ["#2563eb", "#f97316", "#10b981"]; 
-              return {
-                text: `${label} (${pct}%)`,
-                fillStyle: colorArr[i % colorArr.length],
-                strokeStyle: "#fff",
-                lineWidth: 1,
-                hidden: false,
-                index: i
-              };
-            });
+  }, [agg, isDark]);
+  const pieOptions = useMemo(() => {
+    const text = isDark ? '#e5eef7' : '#1a3a3a';
+    const tooltipBg = isDark ? 'rgba(15, 22, 32, 0.95)' : '#ffffff';
+    return ({
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: text,
+            generateLabels: (chart) => {
+              const dataset = chart.data.datasets[0] || { data: [] };
+              const total = dataset.data.reduce((a,b)=>a+b,0) || 1;
+              return chart.data.labels.map((label, i) => {
+                const value = dataset.data[i] || 0;
+                const pct = Math.round((value/total)*100);
+                const colorArr = Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor : ['#2563eb', '#f97316', '#10b981']; 
+                return {
+                  text: `${label} (${pct}%)`,
+                  fillStyle: isDark ? '#6b7785' : colorArr[i % colorArr.length],
+                  strokeStyle: isDark ? '#3e4b59' : '#fff',
+                  lineWidth: 1,
+                  hidden: false,
+                  index: i,
+                  fontColor: text
+                };
+              });
+            }
           }
+        },
+        tooltip: {
+          backgroundColor: tooltipBg,
+          titleColor: text,
+          bodyColor: text,
+          borderColor: isDark ? 'rgba(229,238,247,0.12)' : 'rgba(26,58,58,0.12)',
+          borderWidth: 1,
+          callbacks: { label: (ctx) => {
+            const data = ctx.dataset.data;
+            const total = data.reduce((a,b)=>a+b,0) || 1;
+            const v = ctx.parsed;
+            const pct = ((v/total)*100).toFixed(1);
+            return `${ctx.label}: ${v.toLocaleString()} (${pct}%)`;
+          }}
         }
-      },
-      tooltip: { callbacks: { label: (ctx) => {
-        const data = ctx.dataset.data;
-        const total = data.reduce((a,b)=>a+b,0) || 1;
-        const v = ctx.parsed;
-        const pct = ((v/total)*100).toFixed(1);
-        return `${ctx.label}: ${v.toLocaleString()} (${pct}%)`;
-      }}}
-    }
-  }), []);
+      }
+    });
+  }, [isDark]);
 
   const applyFilters = (e) => {
     e?.preventDefault?.();
@@ -323,7 +370,7 @@ const Relatorios = () => {
 
             <section className="grafico" role={srOpt ? "region" : undefined} aria-labelledby={srOpt ? "sec-top-categorias" : undefined}>
               <div className="section-header"><h3 id="sec-top-categorias">Top Categorias</h3></div>
-              <Funnel data={categoriasPercent} />
+              <Funnel data={categoriasPercent} isDark={isDark} />
             </section>
 
             <section className="grafico" role={srOpt ? "region" : undefined} aria-labelledby={srOpt ? "sec-distribuicao" : undefined}>
@@ -339,8 +386,8 @@ const Relatorios = () => {
           <div className="modal-conteudo export-modal">
             <p>Exportar Relatório</p>
             <div className="modal-botoes">
-              <button className="btn-excel" onClick={() => { setShowExport(false); alert("Exportação EXCEL iniciada"); }}>EXCEL</button>
-              <button className="btn-csv" onClick={() => { setShowExport(false); alert("Exportação CSV iniciada"); }}>CSV</button>
+              <button className="btn-excel" onClick={() => { setShowExport(false); import('../../utils/notify').then(m=>m.notifySuccess('Exportação EXCEL iniciada')); }}>EXCEL</button>
+              <button className="btn-csv" onClick={() => { setShowExport(false); import('../../utils/notify').then(m=>m.notifySuccess('Exportação CSV iniciada')); }}>CSV</button>
             </div>
           </div>
         </div>
@@ -351,7 +398,7 @@ const Relatorios = () => {
 
 export default Relatorios;
 
-const Funnel = ({ data }) => {
+const Funnel = ({ data, isDark }) => {
   if (!data || !data.length) return null;
   const minWidth = 42;
   const heights = 12;
@@ -390,7 +437,7 @@ const Funnel = ({ data }) => {
     widths[idxOutros] = Math.max(30, targetOutros);
   }
 
-  const colors = [COLORS.blue, COLORS.orange, COLORS.green, COLORS.darkTeal];
+  const colors = isDark ? ["#9aa6b2", "#6b7785", "#3e4b59", "#2b3542"] : [COLORS.blue, COLORS.orange, COLORS.green, COLORS.darkTeal];
 
   const rows = widths.map((w, i) => {
   const next = i < n - 1 ? widths[i + 1] : Math.max(10, w * 0.6);

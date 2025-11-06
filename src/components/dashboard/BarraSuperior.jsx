@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./barra_superior.css";
-import Pesquisa from "../../assets/pesquisa.png";
-import { FiHelpCircle, FiBell } from "react-icons/fi";
+import { FiHelpCircle, FiBell, FiSearch } from "react-icons/fi";
 import SuporteModal from "../suporte/SuporteModal";
 import { getAccessibilityPrefs } from "../../utils/accessibility";
 
@@ -77,7 +76,7 @@ const BarraSuperior = () => {
   return (
     <div className="barra-superior" role="banner" aria-label="Barra superior">
       <div className="secao-pesquisa" role="search" aria-label="Pesquisar">
-        <img src={Pesquisa} alt="" aria-hidden="true" className="icone-pesquisa" />
+        <FiSearch aria-hidden className="icone-pesquisa" />
         <input
           type="text"
           id="campo-pesquisa"

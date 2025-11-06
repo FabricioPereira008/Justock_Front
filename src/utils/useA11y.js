@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getAccessibilityPrefs } from './accessibility';
 
-// Returns true when "toggleLeitor" (screen-reader optimized) is enabled
 export function useSrOptimized() {
   const [srOpt, setSrOpt] = useState(() => getAccessibilityPrefs().toggleLeitor === true);
   useEffect(() => {
@@ -17,7 +16,6 @@ export function useSrOptimized() {
   return srOpt;
 }
 
-// Helper that returns props only if condition is true
 export function srProps(enabled, props) {
   return enabled ? props : {};
 }

@@ -31,6 +31,20 @@
   display: block;
   margin: 0 auto 12px auto;
 }
+.conexoes_logo_text {
+  display: block;
+  margin: 22px auto 36px auto;
+  color: #0D3B3F;
+  font-family: 'Lexend', 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 2.1rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: .3px;
+  text-align: center;
+}
 .conexoes_card_corpo {
   width: 100%;
   text-align: left;

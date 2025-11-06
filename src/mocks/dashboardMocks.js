@@ -88,14 +88,6 @@ const mockData = {
       { id: 1020, dataEmissao: "20/10/2025", dataEntrega: "25/10/2025", marketplace: "Amazon", pagamento: "Boleto", status: "Enviado" },
     ],
   },
-  "/api/recent-activity": {
-    activities: [
-      { type: "validado", icon: "✔️", text: "Pagamento validado (#878)", time: "15m" },
-      { type: "reembolsado", icon: "❗", text: "Pedido reembolsado (#845)", time: "1h" },
-      { type: "novo", icon: "✔️", text: "Pedido novo (#897)", time: "2h" },
-      { type: "sincronizado", icon: "✔️", text: "Inventário sincronizado", time: "3h" },
-    ],
-  },
   "/api/alerts": {
     alerts: [
       { type: "baixo", icon: "❗", text: "Item #78 - Em baixa", time: "1h" },

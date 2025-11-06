@@ -4,28 +4,18 @@ import BarraLateral from "../../components/dashboard/BarraLateral";
 import BarraSuperior from "../../components/dashboard/BarraSuperior";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/configuracoes.css";
-import { getFontPref, getSidebarPref, setFontPref, setSidebarPref } from "../../utils/appearance";
+import { getFontPref, getSidebarPref, setFontPref, setSidebarPref, getThemePref, setThemePref } from "../../utils/appearance";
 import { getAccessibilityPrefs, setAccessibilityPrefs, playFeedback } from "../../utils/accessibility";
 import { useSrOptimized, srProps } from "../../utils/useA11y";
 
-const Toggle = ({ checked, onChange, label, id }) => {
-  return (
-    <label className="conf-toggle" htmlFor={id}>
-      <input id={id} type="checkbox" checked={checked} onChange={onChange} />
-      <span className="conf-toggle-trilho" aria-hidden>
-        <span className="conf-toggle-bolinha" />
-      </span>
-      {label && <span className="conf-toggle-rotulo">{label}</span>}
-    </label>
-  );
-};
-
-const ThemeSwitch = ({ value, onChange }) => (
+const ThemeSwitch = ({ value, onChange, disabled }) => (
   <button
     type="button"
     className={`conf-tema-switch ${value ? 'escuro' : 'claro'}`}
-    onClick={() => onChange(!value)}
+    onClick={() => { if (!disabled) onChange(!value); }}
     aria-label={value ? 'Tema escuro' : 'Tema claro'}
+    aria-disabled={disabled || undefined}
+    disabled={disabled}
   >
     <span className="conf-tema-icone sol"><FiSun /></span>
     <span className="conf-tema-icone lua"><FiMoon /></span>
@@ -51,35 +41,6 @@ const Select = ({ label, value, onChange, options, id }) => (
   </div>
 );
 
-// Helpers para interconversão de cores (#hex <-> rgb(r,g,b))
-function toHex(color) {
-  if (!color) return '#00e0ff';
-  const s = String(color).trim();
-  if (s.startsWith('#')) return s;
-  const m = s.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
-  if (!m) return '#00e0ff';
-  const r = clamp255(parseInt(m[1], 10));
-  const g = clamp255(parseInt(m[2], 10));
-  const b = clamp255(parseInt(m[3], 10));
-  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
-}
-function toRgb(color) {
-  if (!color) return 'rgb(0, 224, 255)';
-  const s = String(color).trim();
-  if (s.startsWith('rgb')) return s;
-  if (s.startsWith('#')) {
-    let h = s.replace('#','');
-    if (h.length === 3) h = h.split('').map(ch => ch+ch).join('');
-    const num = parseInt(h, 16);
-    const r = (num >> 16) & 255;
-    const g = (num >> 8) & 255;
-    const b = num & 255;
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-  return s;
-}
-function clamp255(n) { return Math.max(0, Math.min(255, isFinite(n) ? n : 0)); }
-
 const Configuracoes = () => {
   const srOpt = useSrOptimized();
   // Aparência
@@ -91,6 +52,7 @@ const Configuracoes = () => {
   useEffect(() => {
     setFonte(getFontPref());
     setSidebar(getSidebarPref());
+    setTemaEscuro(getThemePref() === 'dark');
   }, []);
 
   // Exibição
@@ -112,25 +74,36 @@ const Configuracoes = () => {
 
   const baseAcess = getAccessibilityPrefs();
   const [acess, setAcess] = useState(() => baseAcess);
-  const [cursorEnabled, setCursorEnabled] = useState(() => baseAcess.cursorEnabled ?? false);
-  const [cursorSize, setCursorSize] = useState(() => baseAcess.cursorSize || 'medium');
-  const [cursorColor, setCursorColor] = useState(() => baseAcess.cursorColor || '#00e0ff');
+  const [toast, setToast] = useState("");
+
+  // Lock do tema só após salvar com alto contraste ativo (não pode ter os dois ativos ao mesmo tempo)
+  const [temaLocked, setTemaLocked] = useState(() => baseAcess.altoContraste === true);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast("") , 3600);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   const handleSave = () => {
     setFontPref(fonte);
     setSidebarPref(sidebar);
-    // persist and apply accessibility classes globally
-    // persist and apply accessibility classes globally (incl. cursor)
-    setAccessibilityPrefs({
-      ...acess,
-      cursorEnabled,
-      cursorSize,
-      cursorColor,
-    });
+    // Persistir acessibilidade primeiro
+    setAccessibilityPrefs({ ...acess });
+    // Regras de conflito aplicadas apenas ao salvar
+    if (acess.altoContraste && temaEscuro) {
+      // Alto contraste e dark não coexistem (prioriza alto contraste)
+      setThemePref('light');
+      setTemaEscuro(false);
+      setTemaLocked(true);
+      setToast('Modo de alto contraste e tema escuro não podem ser usados simultaneamente. O tema escuro foi desativado.');
+    } else {
+      setThemePref(temaEscuro ? 'dark' : 'light');
+      setTemaLocked(!!acess.altoContraste);
+    }
     console.log("Preferências salvas:", {
-      temaEscuro, fonte, sidebar, idioma, moeda, notifs, acess, cursorEnabled, cursorSize, cursorColor
+      temaEscuro, fonte, sidebar, idioma, moeda, notifs, acess
     });
-    // optional audible feedback if enabled
     playFeedback('success');
   };
 
@@ -153,7 +126,10 @@ const Configuracoes = () => {
                 <div className="conf-secao">
                   <div className="conf-linha">
                     <span className="conf-linha-rotulo">Tema:</span>
-                    <ThemeSwitch value={temaEscuro} onChange={setTemaEscuro} />
+                    <ThemeSwitch value={temaEscuro} onChange={setTemaEscuro} disabled={temaLocked} />
+                    {temaLocked && (
+                      <span className="conf-hint-inline" role="note">Desativado enquanto o Modo de alto contraste estiver ativo.</span>
+                    )}
                   </div>
                   <Select
                     id="fonte"
@@ -238,55 +214,6 @@ const Configuracoes = () => {
                   <CheckItem id="a6" checked={acess.toggleLeitor} onChange={() => updateAcess("toggleLeitor")}>Toggle (otimizar leitor de tela)</CheckItem>
                 </div>
               </section>
-
-              <section className="conf-cartao" {...srProps(srOpt, { role: 'region', 'aria-labelledby': 'conf-estetica' })}>
-                <h2 id="conf-estetica" className="conf-cartao-titulo">Estética</h2>
-                <div className="conf-secao">
-                  <Toggle
-                    id="cursor-enabled"
-                    checked={cursorEnabled}
-                    onChange={() => setCursorEnabled(v => !v)}
-                    label="Ativar cursor personalizado"
-                  />
-                  {cursorEnabled && (
-                    <>
-                      <Select
-                        id="cursor-size"
-                        label="Tamanho do cursor:"
-                        value={cursorSize}
-                        onChange={setCursorSize}
-                        options={[
-                          { value: "small", label: "Pequeno" },
-                          { value: "medium", label: "Padrão (Médio)" },
-                          { value: "large", label: "Grande" },
-                        ]}
-                      />
-                      <div className="conf-campo">
-                        <label className="conf-rotulo" htmlFor="cursor-color">Cor do cursor (RGB):</label>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <input
-                            id="cursor-color"
-                            type="color"
-                            value={toHex(cursorColor)}
-                            onChange={(e) => setCursorColor(e.target.value)}
-                            aria-label="Selecionar cor do cursor"
-                            style={{ width: 44, height: 28, border: '1px solid #ccc', borderRadius: 4, background: '#fff' }}
-                          />
-                          <input
-                            type="text"
-                            value={toRgb(cursorColor)}
-                            onChange={(e) => setCursorColor(e.target.value)}
-                            aria-label="Editar cor RGB do cursor"
-                            placeholder="rgb(0, 224, 255)"
-                            className="conf-input"
-                            style={{ flex: 1, minWidth: 0 }}
-                          />
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </section>
             </div>
           </div>
 
@@ -295,6 +222,9 @@ const Configuracoes = () => {
           </div>
         </div>
       </main>
+      {toast && (
+        <div className="conf-toast" role="status" aria-live="polite">{toast}</div>
+      )}
     </div>
   );
 };
