@@ -53,4 +53,5 @@ npm run build
 - React Router DOM 7.9.1
 - Chart.js 4.5.1
 - React DatePicker 8.8.0
-
+- PrimeReact 10.9.7
+- PrimeIcons 7.0.0
