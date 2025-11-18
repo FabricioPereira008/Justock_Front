@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import mockFetch from "../../mocks/dashboardMocks";
-import DatePicker from "react-datepicker";
+import { Calendar } from "primereact/calendar";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/pedidos.css";
-import "react-datepicker/dist/react-datepicker.css";
 import { useSrOptimized, srProps } from "../../utils/useA11y";
 import { notifySuccess, notifyError } from "../../utils/notify";
+import DialogoReutilizavel from "../../components/common/DialogoReutilizavel";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const Pedidos = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,17 +22,33 @@ const Pedidos = () => {
   const [observation, setObservation] = useState("");
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
+  const [sortField, setSortField] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
   const srOpt = useSrOptimized();
   const [filters, setFilters] = useState({
     search: "",
-    period: [null, null],
+    period: null,
     marketplace: "Todos",
     status: "Todos",
   });
 
   useEffect(() => {
-    setFilteredOrders(orders);
-  }, [orders]);
+    let data = [...orders];
+    if (sortField && sortOrder) {
+      data.sort((a, b) => {
+        const av = a[sortField];
+        const bv = b[sortField];
+        if (av == null && bv == null) return 0;
+        if (av == null) return -1 * sortOrder;
+        if (bv == null) return 1 * sortOrder;
+        if (typeof av === 'number' && typeof bv === 'number') {
+          return (av - bv) * sortOrder;
+        }
+        return String(av).localeCompare(String(bv)) * sortOrder;
+      });
+    }
+    setFilteredOrders(data);
+  }, [orders, sortField, sortOrder]);
 
   useEffect(() => {
     mockFetch('/api/pedidos')
@@ -45,8 +66,20 @@ const Pedidos = () => {
   }, []);
 
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentOrders = filteredOrders.slice(startIndex, startIndex + itemsPerPage);
+
+  const normalizeDate = (d) => {
+    if (!d) return null;
+    const nd = new Date(d);
+    nd.setHours(0, 0, 0, 0);
+    return nd;
+  };
+  const parseBRDate = (br) => {
+    if (!br) return null;
+    const [day, month, year] = br.split('/').map((v) => parseInt(v, 10));
+    const dt = new Date(year, (month || 1) - 1, day || 1);
+    dt.setHours(0, 0, 0, 0);
+    return isNaN(dt.getTime()) ? null : dt;
+  };
 
   const applyFilters = () => {
     let filtered = orders;
@@ -55,23 +88,16 @@ const Pedidos = () => {
       filtered = filtered.filter((order) => order.id.toString().includes(filters.search));
     }
 
-    const [startDate, endDate] = filters.period;
-    if (startDate) {
-      const startStr = startDate.toISOString().split("T")[0];
+    const [startDate, endDate] = filters.period || [];
+    const start = normalizeDate(startDate);
+    const end = normalizeDate(endDate);
+    if (start || end) {
       filtered = filtered.filter((order) => {
-        if (!order.dataEmissao) return false;
-        const [day, month, year] = order.dataEmissao.split('/');
-        const orderDateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        return orderDateStr >= startStr;
-      });
-    }
-    if (endDate) {
-      const endStr = endDate.toISOString().split("T")[0];
-      filtered = filtered.filter((order) => {
-        if (!order.dataEmissao) return false;
-        const [day, month, year] = order.dataEmissao.split('/');
-        const orderDateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        return orderDateStr <= endStr;
+        const od = parseBRDate(order.dataEmissao);
+        if (!od) return false;
+        const afterStart = start ? od.getTime() >= start.getTime() : true;
+        const beforeEnd = end ? od.getTime() <= end.getTime() : true;
+        return afterStart && beforeEnd;
       });
     }
 
@@ -87,7 +113,7 @@ const Pedidos = () => {
   };
 
   const clearFilters = () => {
-    setFilters({ search: "", period: [null, null], marketplace: "Todos", status: "Todos" });
+    setFilters({ search: "", period: null, marketplace: "Todos", status: "Todos" });
     setFilteredOrders(orders);
     setCurrentPage(1);
   };
@@ -105,11 +131,17 @@ const Pedidos = () => {
   };
 
   const saveObservation = () => {
+    if (!selectedOrder) return;
+    const updated = orders.map(o =>
+      o.id === selectedOrder.id ? { ...o, observacao: observation } : o
+    );
+    setOrders(updated);
+    setTimeout(() => applyFilters(), 0);
     notifySuccess(`Observação salva para o pedido #${selectedOrder.id}.`);
     closeModal();
   };
 
-  // Utilities
+  // Utilidades
   const toBR = (d) => {
     if (!d) return "";
     const dd = new Date(d);
@@ -149,26 +181,44 @@ const Pedidos = () => {
   notifySuccess(`Pedido #${order.id} adicionado.`);
   };
 
-  const goToPreviousPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
   const handleFilterChange = (key, value) => {
-    if (key === "period") setFilters({ ...filters, period: value });
-    else setFilters({ ...filters, [key]: value });
+    if (key === "period") {
+      // Garante que início <= final quando as duas datas forem escolhidas
+      let normalized = value;
+      if (Array.isArray(value) && value[0] && value[1]) {
+        const a = normalizeDate(value[0]);
+        const b = normalizeDate(value[1]);
+        normalized = a && b && a.getTime() > b.getTime() ? [b, a] : [a, b];
+      }
+      setFilters((prev) => ({ ...prev, period: normalized }));
+    } else {
+      setFilters({ ...filters, [key]: value });
+    }
+  };
+
+  const handleSort = (e) => {
+    if (!e.sortField) return;
+    if (sortField !== e.sortField) {
+      setSortField(e.sortField);
+      setSortOrder(1);
+      return;
+    }
+    if (sortOrder === 1) {
+      setSortOrder(-1);
+    } else if (sortOrder === -1) {
+      setSortField(null);
+      setSortOrder(null);
+    } else {
+      setSortOrder(1);
+    }
   };
 
   return (
     <div {...srProps(srOpt, { role: 'main', 'aria-label': 'Lista de pedidos' })}>
-          <div className="pedidos-header">
+          <div className="pedidos-header prime-filtro">
             <div className="filter-group">
               <label htmlFor="filtro-pedido">Nº Pedido:</label>
-              <input
-                type="text"
+              <InputText
                 className="filter-search"
                 value={filters.search}
                 onChange={(e) => handleFilterChange("search", e.target.value)}
@@ -179,55 +229,48 @@ const Pedidos = () => {
 
             <div className="filter-group">
               <label htmlFor="filtro-periodo">Período:</label>
-              <DatePicker
+              <Calendar
+                inputId="filtro-periodo"
+                value={filters.period}
+                onChange={(e) => handleFilterChange("period", e.value)}
+                selectionMode="range"
+                dateFormat="dd/mm/yy"
+                placeholder="Selecionar"
                 className="filter-date-range"
-                id="filtro-periodo"
-                selectsRange={true}
-                startDate={filters.period[0]}
-                endDate={filters.period[1]}
-                onChange={(update) => handleFilterChange("period", update)}
-                isClearable={true}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Selecione o período"
+                appendTo="self"
               />
             </div>
 
             <div className="filter-group">
               <label htmlFor="filtro-loja">Lojas:</label>
-              <select
-                className="filter-select"
+              <Dropdown
+                className="filter-select w-full"
                 value={filters.marketplace}
-                id="filtro-loja"
-                onChange={(e) => handleFilterChange("marketplace", e.target.value)}
-              >
-                <option>Todos</option>
-                <option>Mercado Livre</option>
-                <option>Amazon</option>
-                <option>Shopee</option>
-              </select>
+                inputId="filtro-loja"
+                onChange={(e) => handleFilterChange("marketplace", e.value)}
+                options={[ 'Todos', 'Mercado Livre', 'Amazon', 'Shopee' ]}
+                placeholder="Selecione"
+                appendTo="self"
+              />
             </div>
 
             <div className="filter-group">
               <label htmlFor="filtro-status">Status:</label>
-              <select
-                className="filter-select"
+              <Dropdown
+                className="filter-select w-full"
                 value={filters.status}
-                id="filtro-status"
-                onChange={(e) => handleFilterChange("status", e.target.value)}
-              >
-                <option>Todos</option>
-                <option>Pendente</option>
-                <option>Enviado</option>
-                <option>Entregue</option>
-                <option>Cancelado</option>
-              </select>
+                inputId="filtro-status"
+                onChange={(e) => handleFilterChange("status", e.value)}
+                options={[ 'Todos', 'Pendente', 'Enviado', 'Entregue', 'Cancelado' ]}
+                placeholder="Selecione"
+                appendTo="self"
+              />
             </div>
 
             <button className="filter-button" onClick={applyFilters} {...srProps(srOpt, { 'aria-label': 'Aplicar filtros' })}>Filtrar</button>
 
             {(filters.search ||
-              filters.period[0] ||
-              filters.period[1] ||
+              (Array.isArray(filters.period) && (filters.period[0] || filters.period[1])) ||
               filters.marketplace !== "Todos" ||
               filters.status !== "Todos") && (
               <button className="clear-filter-button" onClick={clearFilters} {...srProps(srOpt, { 'aria-label': 'Limpar filtros' })}>
@@ -237,187 +280,183 @@ const Pedidos = () => {
           </div>
 
           <div className="pedidos-table-container" {...srProps(srOpt, { role: 'region', 'aria-label': 'Tabela de pedidos' })}>
-            <table className="pedidos-table">
-              <thead>
-                <tr>
-                  <th>Nº Pedido</th>
-                  <th>Data Emissão</th>
-                  <th>Data Entrega</th>
-                  <th>Marketplace</th>
-                  <th>Pagamento</th>
-                  <th>Status Atual</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentOrders.map((order) => (
-                  <tr key={order.id} onClick={() => handleRowClick(order)} style={{ cursor: "pointer" }} {...srProps(srOpt, { 'aria-label': `Abrir detalhes do pedido ${order.id}` })}>
-                    <td>{order.id}</td>
-                    <td>{order.dataEmissao || "-"}</td>
-                    <td>{order.dataEntrega || "-"}</td>
-                    <td>{order.marketplace}</td>
-                    <td>{order.pagamento}</td>
-                    <td>{order.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <DataTable
+              value={filteredOrders}
+              paginator
+              rows={itemsPerPage}
+              className="w-full tabela-pedidos"
+              emptyMessage="Nenhum pedido encontrado"
+              rowHover
+              sortField={sortField}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            >
+              <Column field="id" header="Nº Pedido" sortable />
+              <Column field="dataEmissao" header="Data Emissão" sortable />
+              <Column field="dataEntrega" header="Data Entrega" sortable />
+              <Column field="marketplace" header="Marketplace" sortable />
+              <Column field="pagamento" header="Pagamento" sortable />
+              <Column field="status" header="Status Atual" sortable />
+              <Column
+                header=""
+                style={{ width: '3rem', textAlign: 'center' }}
+                body={(order) => (
+                  <Button
+                    icon="pi pi-pencil"
+                    className="p-button-sm p-button-rounded p-button-text btn-acao-editar"
+                    onClick={() => handleRowClick(order)}
+                    tooltip="Editar pedido"
+                    tooltipOptions={{ position: 'top' }}
+                    aria-label={`Editar pedido ${order.id}`}
+                  />
+                )}
+              />
+            </DataTable>
           </div>
 
-          <div className="pedidos-footer">
+          <div className="pedidos-footer flex justify-content-between align-items-center mt-3">
             <button className="add-button" onClick={openAdd} {...srProps(srOpt, { 'aria-label': 'Adicionar pedido' })}>Adicionar Pedido</button>
-            <div className="pagination">
-              <button className="page-button" onClick={goToPreviousPage} disabled={currentPage === 1} {...srProps(srOpt, { 'aria-label': 'Página anterior' })}>
-                {"<"}
-              </button>
-              <span className="page-info" {...srProps(srOpt, { 'aria-live': 'polite', 'aria-atomic': 'true' })}>{currentPage} de {totalPages}</span>
-              <button className="page-button" onClick={goToNextPage} disabled={currentPage === totalPages} {...srProps(srOpt, { 'aria-label': 'Próxima página' })}>
-                {">"}
-              </button>
-            </div>
+            <span className="text-600">Total: {filteredOrders.length}</span>
           </div>
       
       {modalOpen && selectedOrder && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          backdropFilter: "blur(5px)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "8px",
-            border: "2px solid #007bff",
-            width: "350px",
-            maxHeight: "80%",
-            overflowY: "auto",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
-          }}>
-            <h3 style={{ color: "#007bff", marginBottom: "15px", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "18px", fontWeight: "bold" }}>Detalhes do Pedido #{selectedOrder.id}</h3>
-            <p style={{ color: "black", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "14px" }}><strong>Data Emissão:</strong> {selectedOrder.dataEmissao || "-"}</p>
-            <p style={{ color: "black", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "14px" }}><strong>Data Entrega:</strong> {selectedOrder.dataEntrega || "-"}</p>
-            <p style={{ color: "black", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "14px" }}><strong>Marketplace:</strong> {selectedOrder.marketplace}</p>
-            <p style={{ color: "black", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "14px" }}><strong>Pagamento:</strong> {selectedOrder.pagamento}</p>
-            <p style={{ color: "black", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "14px" }}><strong>Status:</strong> {selectedOrder.status}</p>
-            <div style={{ marginTop: "20px" }}>
-              <label style={{ color: "black", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", fontSize: "14px" }}><strong>Observação:</strong></label>
-              <textarea
+        <DialogoReutilizavel
+          visible={modalOpen}
+          onHide={closeModal}
+          header={`Editar Pedido #${selectedOrder.id}`}
+          position="right"
+          width="480px"
+        >
+          <div role="form" aria-label="Editar pedido" className="flex flex-column gap-3 p-2">
+            <div className="flex flex-column gap-2">
+              <label>Nº do pedido</label>
+              <InputText value={selectedOrder.id} readOnly />
+            </div>
+            <div className="flex flex-column gap-2">
+              <label>Data de emissão</label>
+              <Calendar
+                value={parseBRDate(selectedOrder.dataEmissao)}
+                onChange={(e) => setSelectedOrder(o => ({ ...o, dataEmissao: toBR(e.value) }))}
+                dateFormat="dd/mm/yy"
+                showIcon
+                placeholder="Selecione a data"
+                appendTo="self"
+              />
+            </div>
+            <div className="flex flex-column gap-2">
+              <label>Data de entrega</label>
+              <Calendar
+                value={selectedOrder.dataEntrega ? parseBRDate(selectedOrder.dataEntrega) : null}
+                onChange={(e) => setSelectedOrder(o => ({ ...o, dataEntrega: e.value ? toBR(e.value) : "" }))}
+                dateFormat="dd/mm/yy"
+                showIcon
+                placeholder="Selecione a data"
+                showButtonBar
+                hideOnDateTimeSelect
+                appendTo="self"
+              />
+            </div>
+            <div className="flex flex-column gap-2">
+              <label>Marketplace</label>
+              <InputText
+                value={selectedOrder.marketplace}
+                onChange={(e) => setSelectedOrder(o => ({ ...o, marketplace: e.target.value }))}
+                placeholder="Ex.: Mercado Livre"
+              />
+            </div>
+            <div className="flex flex-column gap-2">
+              <label>Pagamento</label>
+              <Dropdown
+                value={selectedOrder.pagamento}
+                onChange={(e) => setSelectedOrder(o => ({ ...o, pagamento: e.value }))}
+                options={[ 'Dinheiro', 'Cartão de crédito', 'Boleto', 'Pix' ]}
+                placeholder="Selecione"
+                appendTo="self"
+              />
+            </div>
+            <div className="flex flex-column gap-2">
+              <label>Status atual</label>
+              <Dropdown
+                value={selectedOrder.status}
+                onChange={(e) => setSelectedOrder(o => ({ ...o, status: e.value }))}
+                options={[ 'Pendente', 'Enviado', 'Entregue', 'Cancelado', 'Reembolsado' ]}
+                placeholder="Selecione"
+                appendTo="self"
+              />
+            </div>
+            <div className="flex flex-column gap-2">
+              <label>Observação</label>
+              <InputText
                 value={observation}
                 onChange={(e) => setObservation(e.target.value)}
                 placeholder="Digite uma observação..."
-                style={{
-                  width: "100%",
-                  height: "80px",
-                  marginTop: "5px",
-                  padding: "8px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  resize: "vertical",
-                  color: "black",
-                  backgroundColor: "white",
-                  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                  fontSize: "14px"
-                }}
               />
             </div>
-            <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
-              <button
-                onClick={closeModal}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#6c757d",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                  fontSize: "14px"
-                }}
-              >
-                Fechar
-              </button>
-              <button
-                onClick={saveObservation}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#28a745",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                  fontSize: "14px"
-                }}
-              >
-                Salvar Observação
-              </button>
+            <div className="flex justify-content-end gap-2 mt-2">
+              <Button label="Cancelar" severity="secondary" onClick={closeModal} />
+              <Button label="Salvar" icon="pi pi-check" onClick={saveObservation} />
             </div>
           </div>
-        </div>
-  )}
+        </DialogoReutilizavel>
+      )}
 
       {addOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content" role="dialog" aria-modal="true" aria-label="Adicionar pedido">
-            <h2>Novo Pedido</h2>
-            <div className="form-group">
+  <DialogoReutilizavel
+          visible={addOpen}
+          onHide={cancelAdd}
+          header="Novo Pedido"
+          position="right"
+          width="480px"
+        >
+          <div role="form" aria-label="Adicionar pedido" className="flex flex-column gap-3 p-2">
+            <div className="flex flex-column gap-2">
               <label>Nº do pedido</label>
-              <input type="text" value={nextOrderId()} readOnly />
+              <InputText value={nextOrderId()} readOnly />
             </div>
-            <div className="form-group">
+            <div className="flex flex-column gap-2">
               <label>Data de emissão (obrigatória)</label>
-              <DatePicker
-                selected={newOrder.dataEmissao}
-                onChange={(d) => setNewOrder(v => ({ ...v, dataEmissao: d }))}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Selecione a data"
+              <Calendar
+                value={newOrder.dataEmissao}
+                onChange={(e) => setNewOrder(v => ({ ...v, dataEmissao: e.value }))}
+                dateFormat="dd/mm/yy"
+                showIcon
+                placeholder="Selecione a data"
+                appendTo="self"
               />
             </div>
-            <div className="form-group">
+            <div className="flex flex-column gap-2">
               <label>Data de entrega (opcional)</label>
-              <DatePicker
-                selected={newOrder.dataEntrega}
-                onChange={(d) => setNewOrder(v => ({ ...v, dataEntrega: d }))}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Selecione a data"
-                isClearable
+              <Calendar
+                value={newOrder.dataEntrega}
+                onChange={(e) => setNewOrder(v => ({ ...v, dataEntrega: e.value }))}
+                dateFormat="dd/mm/yy"
+                showIcon
+                placeholder="Selecione a data"
+                showButtonBar
+                hideOnDateTimeSelect
+                appendTo="self"
               />
             </div>
-            <div className="form-group">
+            <div className="flex flex-column gap-2">
               <label>Marketplace</label>
-              <input type="text" value={newOrder.marketplace} onChange={(e) => setNewOrder(v => ({ ...v, marketplace: e.target.value }))} placeholder="Ex.: Mercado Livre" />
+              <InputText value={newOrder.marketplace} onChange={(e) => setNewOrder(v => ({ ...v, marketplace: e.target.value }))} placeholder="Ex.: Mercado Livre" />
             </div>
-            <div className="form-group">
+            <div className="flex flex-column gap-2">
               <label>Pagamento</label>
-              <select value={newOrder.pagamento} onChange={(e) => setNewOrder(v => ({ ...v, pagamento: e.target.value }))}>
-                <option>Dinheiro</option>
-                <option>Cartão de crédito</option>
-                <option>Boleto</option>
-                <option>Pix</option>
-              </select>
+              <Dropdown value={newOrder.pagamento} onChange={(e) => setNewOrder(v => ({ ...v, pagamento: e.value }))}
+                options={[ 'Dinheiro', 'Cartão de crédito', 'Boleto', 'Pix' ]} placeholder="Selecione" appendTo="self" />
             </div>
-            <div className="form-group">
+            <div className="flex flex-column gap-2">
               <label>Status atual</label>
-              <select value={newOrder.status} onChange={(e) => setNewOrder(v => ({ ...v, status: e.target.value }))}>
-                <option>Pendente</option>
-                <option>Entregue</option>
-                <option>Cancelado</option>
-                <option>Reembolsado</option>
-              </select>
+              <Dropdown value={newOrder.status} onChange={(e) => setNewOrder(v => ({ ...v, status: e.value }))}
+                options={[ 'Pendente', 'Entregue', 'Cancelado', 'Reembolsado' ]} placeholder="Selecione" appendTo="self" />
             </div>
-            <div className="modal-buttons">
-              <button className="botao-cancelar" onClick={cancelAdd}>Cancelar</button>
-              <button className="botao-adicionar" onClick={confirmAdd}>Adicionar Pedido</button>
+            <div className="flex justify-content-end gap-2 mt-2">
+              <Button label="Cancelar" severity="secondary" onClick={cancelAdd} />
+              <Button label="Adicionar Pedido" icon="pi pi-check" onClick={confirmAdd} />
             </div>
           </div>
-        </div>
+  </DialogoReutilizavel>
       )}
     </div>
   );

@@ -1,59 +1,59 @@
-import "./suporte_modal.css";
+import DialogoReutilizavel from "../common/DialogoReutilizavel";
+import "../../styles/components/tema_modal_suporte.css";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Button } from "primereact/button";
+import { Divider } from "primereact/divider";
+import React, { useState } from "react";
 
 function SuporteModal({ open, onClose }) {
-  const overlayClass = open ? "suporte-fundo aberto" : "suporte-fundo";
-  const modalClass = open ? "suporte-janela aberto" : "suporte-janela";
+  const [mensagem, setMensagem] = useState("");
 
+  // Enviar não deve fechar o modal no momento; manter sem ação.
   const handleSubmit = (event) => {
     event.preventDefault();
+    // Futuro: enviar mensagem ao suporte
   };
 
   return (
-    <div className={overlayClass} onClick={onClose}>
-      <div
-        className={modalClass}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="suporte-titulo"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <header className="suporte-cabecalho">
-          <div className="suporte-cabecalho-conteudo">
-            <p className="suporte-titulo" id="suporte-titulo">Suporte JusTock</p>
-            <span className="suporte-subtitulo">Equipe disponível para ajudar</span>
-          </div>
-          <button
-            type="button"
-            className="suporte-fechar"
-            aria-label="Fechar suporte"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </header>
-        <div className="suporte-corpo">
-          <div className="suporte-boasvindas">
-            <h4>Olá!</h4>
-            <p>Como podemos ajudar hoje?</p>
-          </div>
+    <DialogoReutilizavel
+      visible={open}
+      onHide={onClose}
+      position="bottom-right"
+      header={
+        <div className="flex flex-column">
+          <span className="font-bold">Suporte JusTock</span>
+          <small className="text-600">Equipe disponível para ajudar</small>
         </div>
-        <form className="suporte-rodape" onSubmit={handleSubmit}>
-          <div className="suporte-linha-entrada">
-            <button type="button" className="suporte-anexar" aria-label="Anexar arquivo">
-              Anexar
-            </button>
-            <textarea
-              className="suporte-entrada"
-              placeholder="Digite sua mensagem aqui..."
-              rows={2}
-            ></textarea>
+      }
+      width="420px"
+      className="dialogo-suporte"
+      maskClassName="mascara-dialogo-suporte"
+      contentClassName="conteudo-dialogo-suporte"
+    >
+      <div className="p-3">
+        <div className="mb-3 text-center cabecalho-suporte">
+          <div className="titulo-suporte text-lg font-semibold">Olá!</div>
+          <div className="subtitulo-suporte">Como podemos ajudar hoje?</div>
+        </div>
+        <form onSubmit={handleSubmit} className="flex flex-column gap-2 corpo-chat-suporte">
+          <div className="linha-anexar">
+            <Button type="button" label="Anexar" icon="pi pi-paperclip" outlined className="botao-anexar" />
           </div>
-          <button type="submit" className="suporte-enviar">
-            Enviar
-          </button>
+          <InputTextarea
+            className="textarea-suporte"
+            placeholder="Digite sua mensagem aqui..."
+            rows={4}
+            value={mensagem}
+            onChange={(e) => setMensagem(e.target.value)}
+            /* Sem autoResize: mantém altura e ativa scroll ao exceder */
+          />
+          <div className="flex justify-content-end gap-1 acoes-chat">
+            {/* Usar ícone X do Dialog */}
+            <Button type="button" label="Enviar" icon="pi pi-send" />
+          </div>
         </form>
       </div>
-    </div>
+    </DialogoReutilizavel>
   );
 }
 

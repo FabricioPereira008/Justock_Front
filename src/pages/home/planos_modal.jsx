@@ -1,5 +1,9 @@
 import React from "react";
-import "../../styles/pages/home/planos_modal.css";
+import DialogoReutilizavel from "../../components/common/DialogoReutilizavel";
+import { Card } from "primereact/card";
+import { Button } from "primereact/button";
+import { Tag } from "primereact/tag";
+import "../../styles/pages/home/tema_modal_planos.css";
 
 const planos = [
   {
@@ -32,36 +36,46 @@ const planos = [
 ];
 
 const PlanosModal = ({ open, onClose }) => {
-  if (!open) return null;
   return (
-    <div className="sobreposicao-planos" onClick={onClose}>
-      <div className="caixa-planos" onClick={e => e.stopPropagation()}>
-        <button className="fechar-planos" aria-label="Fechar" onClick={onClose}>×</button>
-        <h1 className="titulo-planos">Nossos Planos</h1>
-        <div className="cartoes-planos">
-          {planos.map((plano) => (
-            <div
-              key={plano.nome}
-              className={`cartao-plano${plano.recomendado ? " recomendado" : ""}`}
-            >
+  <DialogoReutilizavel
+      visible={open}
+      onHide={onClose}
+      header="Nossos Planos"
+      position="top"
+      width="min(1040px, 92vw)"
+  maskClassName="mascara-dialogo-planos"
+  className="dialogo-planos"
+      dismissableMask
+    >
+      <div className="grid grade-planos">
+        {planos.map((plano) => (
+          <div key={plano.nome} className="col-12 md:col-4">
+            <Card className={`cartao-plano ${plano.recomendado ? 'recomendado' : ''}`}>
               {plano.recomendado && (
-                <div className="selo-recomendado">RECOMENDADO</div>
+                <Tag value="RECOMENDADO" className="badge-recomendado" />
               )}
-              <h2>{plano.nome}</h2>
-              <div className="preco-plano">{plano.preco}<span> /mês</span></div>
-              <p className="mes-gratis">1 mês grátis</p>
+              <div className="cabecalho-plano">
+                <h2 className="nome-plano">{plano.nome}</h2>
+              </div>
+              <div className="preco-plano">
+                {plano.preco}
+                <span className="periodo-preco"> /mês</span>
+              </div>
+              <div className="texto-teste-gratis">1 mês grátis</div>
               <ul className="beneficios-plano">
-                <li>✓ {plano.usuarios}</li>
-                <li>✓ {plano.integracoes}</li>
-                <li>✓ {plano.produtos}</li>
-                <li>✓ {plano.suporte}</li>
+                <li><span className="icone-check">✓</span>{plano.usuarios}</li>
+                <li><span className="icone-check">✓</span>{plano.integracoes}</li>
+                <li><span className="icone-check">✓</span>{plano.produtos}</li>
+                <li><span className="icone-check">✓</span>{plano.suporte}</li>
               </ul>
-              <button className="botao-plano">Escolher Plano</button>
-            </div>
-          ))}
-        </div>
+              <div className="acoes-plano">
+                <Button label="Escolher Plano" className="botao-plano w-full" />
+              </div>
+            </Card>
+          </div>
+        ))}
       </div>
-    </div>
+  </DialogoReutilizavel>
   );
 };
 
