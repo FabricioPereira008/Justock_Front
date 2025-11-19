@@ -237,7 +237,10 @@ const Pedidos = () => {
                 dateFormat="dd/mm/yy"
                 placeholder="Selecionar"
                 className="filter-date-range"
-                appendTo="self"
+                appendTo={null}
+                panelClassName="jt-calendar-dropdown"
+                monthNavigator
+                yearNavigator
               />
             </div>
 
@@ -338,9 +341,11 @@ const Pedidos = () => {
                 value={parseBRDate(selectedOrder.dataEmissao)}
                 onChange={(e) => setSelectedOrder(o => ({ ...o, dataEmissao: toBR(e.value) }))}
                 dateFormat="dd/mm/yy"
-                showIcon
                 placeholder="Selecione a data"
-                appendTo="self"
+                appendTo={null}
+                panelClassName="jt-calendar-dropdown"
+                monthNavigator
+                yearNavigator
               />
             </div>
             <div className="flex flex-column gap-2">
@@ -349,11 +354,11 @@ const Pedidos = () => {
                 value={selectedOrder.dataEntrega ? parseBRDate(selectedOrder.dataEntrega) : null}
                 onChange={(e) => setSelectedOrder(o => ({ ...o, dataEntrega: e.value ? toBR(e.value) : "" }))}
                 dateFormat="dd/mm/yy"
-                showIcon
                 placeholder="Selecione a data"
-                showButtonBar
-                hideOnDateTimeSelect
-                appendTo="self"
+                appendTo={null}
+                panelClassName="jt-calendar-dropdown"
+                monthNavigator
+                yearNavigator
               />
             </div>
             <div className="flex flex-column gap-2">
@@ -419,9 +424,11 @@ const Pedidos = () => {
                 value={newOrder.dataEmissao}
                 onChange={(e) => setNewOrder(v => ({ ...v, dataEmissao: e.value }))}
                 dateFormat="dd/mm/yy"
-                showIcon
                 placeholder="Selecione a data"
-                appendTo="self"
+                appendTo={null}
+                panelClassName="jt-calendar-dropdown"
+                monthNavigator
+                yearNavigator
               />
             </div>
             <div className="flex flex-column gap-2">
@@ -430,11 +437,11 @@ const Pedidos = () => {
                 value={newOrder.dataEntrega}
                 onChange={(e) => setNewOrder(v => ({ ...v, dataEntrega: e.value }))}
                 dateFormat="dd/mm/yy"
-                showIcon
                 placeholder="Selecione a data"
-                showButtonBar
-                hideOnDateTimeSelect
-                appendTo="self"
+                appendTo={null}
+                panelClassName="jt-calendar-dropdown"
+                monthNavigator
+                yearNavigator
               />
             </div>
             <div className="flex flex-column gap-2">

@@ -49,7 +49,7 @@ const DialogoReutilizavel = ({
       blockScroll
       draggable={false}
       resizable={false}
-      className={className}
+      className={`jt-dialog ${isSide ? 'jt-dialog-side' : 'jt-dialog-center'} ${className}`.trim()}
       contentClassName={contentClassName}
       maskClassName={maskClassName}
       style={computedStyle}

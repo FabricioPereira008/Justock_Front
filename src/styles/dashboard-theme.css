@@ -290,3 +290,232 @@ body.sidebar-no-transition .barra_lateral-texto {
 [data-theme="dark"] .conexoes_dados p { color: var(--jt-text) !important; }
 [data-theme="dark"] .conexoes_dados_vazio { color: var(--jt-text-muted) !important; }
 
+/* ====== Dialogos PrimeReact (Pedidos/Produtos) - Light & Dark ====== */
+
+/* --- Tema claro: mais suave e alinhado ao painel --- */
+
+/* Base para todos os dialogs reutilizáveis */
+.jt-dialog.p-dialog {
+  background: var(--jt-surface);
+  border-radius: 10px;
+}
+
+.jt-dialog .p-dialog-header {
+  background: #e8f1ff;
+  border-bottom: 1px solid #d5e3ff;
+  padding: 0.85rem 1.1rem;
+}
+
+.jt-dialog .p-dialog-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--jt-text);
+}
+
+.jt-dialog .p-dialog-content {
+  padding: 1rem 1.1rem 1.1rem;
+  background: #f5f9ff;
+}
+
+.jt-dialog .p-dialog-footer {
+  padding: 0.8rem 1.1rem 1rem;
+  border-top: 1px solid #d5e3ff;
+  background: #eef4ff;
+}
+
+.jt-dialog .p-dialog-header-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.jt-dialog .p-dialog-header-icon:hover {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.jt-dialog .p-dialog-header-icon:focus-visible {
+  outline: 2px solid var(--jt-accent);
+  outline-offset: 1px;
+}
+
+/* Lateral (Pedidos/Produtos) */
+.jt-dialog-side.p-dialog {
+  border-radius: 0;
+  box-shadow: 0 0 0 1px rgba(148,163,184,0.25), 0 18px 45px rgba(15,23,42,0.16);
+}
+
+.jt-dialog-center.p-dialog {
+  box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+}
+
+/* Conteúdo interno de formulários */
+.jt-dialog .p-dialog-content label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--jt-text-muted);
+}
+
+.jt-dialog .p-inputtext,
+.jt-dialog .p-inputnumber-input,
+.jt-dialog .p-dropdown,
+.jt-dialog .p-calendar,
+.jt-dialog .p-calendar input {
+  background: #ffffff;
+  border-color: #d1e0ee;
+  color: var(--jt-text);
+}
+
+.jt-dialog .p-inputtext::placeholder,
+.jt-dialog .p-inputnumber-input::placeholder {
+  color: var(--jt-text-muted);
+}
+
+.jt-dialog .p-inputtext:focus,
+.jt-dialog .p-inputnumber-input:focus,
+.jt-dialog .p-dropdown:not(.p-disabled).p-focus,
+.jt-dialog .p-calendar input:focus {
+  border-color: var(--jt-accent);
+  box-shadow: 0 0 0 1px rgba(37,99,235,0.10);
+}
+
+/* Rodapé de ações em dialogs de formulário */
+.jt-dialog .p-dialog-footer .p-button {
+  min-width: 7rem;
+}
+
+/* Botões principais e secundários nos dialogs (tema claro) */
+.jt-dialog .p-button {
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+/* Botão primário (Salvar/Adicionar) – azul padrão do painel */
+.jt-dialog .p-button:not(.p-button-secondary):not(.p-button-text):not(.p-button-outlined) {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.jt-dialog .p-button:not(.p-button-secondary):not(.p-button-text):not(.p-button-outlined):hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Botão secundário (Cancelar) */
+.jt-dialog .p-button.p-button-secondary {
+  background: #e5edf7;
+  border-color: #d1e0ee;
+  color: #1f2937;
+}
+
+.jt-dialog .p-button.p-button-secondary:hover {
+  background: #d6e3f5;
+}
+
+/* Ícones de ação (calendário, dropdown, etc.) no tema claro */
+.jt-dialog .p-inputtext + .p-datepicker-trigger,
+.jt-dialog .p-calendar .p-datepicker-trigger,
+.jt-dialog .p-dropdown .p-dropdown-trigger {
+  display: none;
+}
+
+.jt-dialog .p-calendar .p-datepicker-trigger:hover,
+.jt-dialog .p-dropdown .p-dropdown-trigger:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+/* Tema escuro – refinando dialogs dentro do data-theme=dark */
+[data-theme="dark"] .jt-dialog.p-dialog {
+  background: var(--jt-surface) !important;
+  border: 1px solid var(--jt-border) !important;
+}
+
+[data-theme="dark"] .jt-dialog .p-dialog-header {
+  background: #111827;
+  border-bottom-color: var(--jt-border);
+}
+
+[data-theme="dark"] .jt-dialog .p-dialog-title {
+  color: var(--jt-text) !important;
+}
+
+[data-theme="dark"] .jt-dialog .p-dialog-content {
+  background: var(--jt-surface-2) !important;
+}
+
+[data-theme="dark"] .jt-dialog .p-dialog-footer {
+  background: #0b1220;
+}
+
+[data-theme="dark"] .jt-dialog .p-inputtext,
+[data-theme="dark"] .jt-dialog .p-inputnumber-input,
+[data-theme="dark"] .jt-dialog .p-dropdown,
+[data-theme="dark"] .jt-dialog .p-calendar,
+[data-theme="dark"] .jt-dialog .p-calendar input {
+  background: #020617;
+  border-color: var(--jt-border);
+  color: var(--jt-text);
+}
+
+[data-theme="dark"] .jt-dialog .p-inputtext::placeholder,
+[data-theme="dark"] .jt-dialog .p-inputnumber-input::placeholder {
+  color: var(--jt-text-muted);
+}
+
+[data-theme="dark"] .jt-dialog .p-dialog-header-icon {
+  background: transparent;
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .jt-dialog .p-dialog-header-icon:hover {
+  background: rgba(148, 163, 184, 0.12);
+}
+
+[data-theme="dark"] .jt-dialog .p-dialog-mask {
+  background: radial-gradient(circle at top, rgba(15,23,42,0.8), rgba(3,7,18,0.9));
+}
+
+/* Botões nos dialogs quando o tema é escuro: seguem a paleta dark */
+[data-theme="dark"] .jt-dialog .p-button:not(.p-button-secondary):not(.p-button-text):not(.p-button-outlined) {
+  background: #111827;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+[data-theme="dark"] .jt-dialog .p-button:not(.p-button-secondary):not(.p-button-text):not(.p-button-outlined):hover {
+  background: #1f2937;
+  border-color: #6b7280;
+}
+
+[data-theme="dark"] .jt-dialog .p-button.p-button-secondary {
+  background: transparent;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .jt-dialog .p-button.p-button-secondary:hover {
+  background: #111827;
+}
+
+/* Ajuste de dropdown de calendário usado em campos "Data de entrega" nos modais
+   para evitar que o painel suba para fora da viewport quando o input
+   está próximo do rodapé do dialog lateral. */
+.jt-calendar-dropdown.p-datepicker {
+  transform-origin: top center !important;
+}
+
+/* PrimeReact Calendar dentro dos dialogs (tema claro): mês/ano mais visíveis */
+.jt-calendar-dropdown .p-datepicker-title select {
+  color: #ffffff;
+}
+
+.jt-calendar-dropdown .p-datepicker-title select option {
+  color: #000000;
+}
+

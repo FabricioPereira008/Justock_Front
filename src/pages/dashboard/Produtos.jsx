@@ -104,11 +104,6 @@ const ModalAdicionarProduto = ({ isOpen, onClose, onAddProduct, nextId }) => {
           <label>Código de Barras</label>
           <InputText name="codigoBarras" value={formData.codigoBarras} onChange={handleChange} required />
         </div>
-        <div className="flex flex-column gap-2">
-          <label>Marcador</label>
-          <Dropdown value={formData.marcador} onChange={(e) => handleChange({ target: { name: 'marcador', value: e.value } })}
-            options={[{ label: 'Nenhum', value: '' }, { label: 'Promoção', value: 'promotion' }, { label: 'Novo', value: 'new' }, { label: 'Descontinuado', value: 'discontinued' }]} optionLabel="label" optionValue="value" appendTo="self" />
-        </div>
         <div className="flex justify-content-end gap-2 mt-2">
           <Button type="button" label="Cancelar" severity="secondary" onClick={onClose} />
           <Button type="submit" label="Adicionar" icon="pi pi-check" />
