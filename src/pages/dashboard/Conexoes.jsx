@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/pages/dashboard/conexoes.css";
 import { notifyError } from "../../utils/notify";
-
-import mockFetch from "../../mocks/dashboardMocks";
 import { useSrOptimized, srProps } from "../../utils/useA11y";
+import { getConexoes } from "../../utils/api";
 
 
 const Conexoes = () => {
@@ -13,29 +12,16 @@ const Conexoes = () => {
 
   useEffect(() => {
     setCarregando(true);
-    fetch("/api/conexoes")
-      .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok");
-        return res.json();
-      })
+    getConexoes()
       .then((data) => {
-        if (data && data.marketplaces) {
+        if (data && Array.isArray(data.marketplaces)) {
           setMarketplaces(data.marketplaces);
+        } else {
+          setMarketplaces([]);
         }
       })
       .catch(() => {
-        mockFetch("/api/conexoes")
-          .then((res) => res && res.json ? res.json() : Promise.resolve(res))
-          .then((data) => {
-            if (data && data.marketplaces) {
-              setMarketplaces(data.marketplaces);
-            } else {
-              setMarketplaces([]);
-            }
-          })
-          .catch(() => {
-            setMarketplaces([]);
-          });
+        setMarketplaces([]);
       })
       .finally(() => setCarregando(false));
   }, []);

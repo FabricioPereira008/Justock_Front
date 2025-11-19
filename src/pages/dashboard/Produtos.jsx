@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import mockFetch from "../../mocks/dashboardMocks";
+import { getProdutos } from "../../utils/api";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/produtos.css";
 import { useSrOptimized, srProps } from "../../utils/useA11y";
@@ -268,21 +268,16 @@ const Produtos = () => {
   }, [products, sortField, sortOrder]);
 
   useEffect(() => {
-    mockFetch('/api/produtos')
-      .then(res => res && typeof res.json === 'function' ? res.json() : res)
-      .then(data => {
-        if (data && data.products) {
+    getProdutos()
+      .then((data) => {
+        if (data && Array.isArray(data.products)) {
           setProducts(data.products);
         } else {
           setProducts([]);
         }
       })
       .catch(() => {
-        if (typeof mockFetch === 'function') {
-          mockFetch('/api/produtos').then(res => res && typeof res.json === 'function' ? res.json() : res).then(data => setProducts(data && data.products ? data.products : []));
-        } else {
-          setProducts([]);
-        }
+        setProducts([]);
       });
   }, []);
   const [filters, setFilters] = useState({

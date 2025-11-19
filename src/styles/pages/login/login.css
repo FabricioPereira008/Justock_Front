@@ -164,6 +164,13 @@
   text-decoration: underline;
 }
 
+.mensagem-erro-login {
+  color: #dc2626;
+  font-weight: 700;
+  margin-top: -8px;
+  text-align: center;
+}
+
 @media (max-width: 480px) {
   .container-login {
     padding: 1rem;

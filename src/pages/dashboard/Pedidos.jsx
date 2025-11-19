@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import mockFetch from "../../mocks/dashboardMocks";
+import { getPedidos } from "../../utils/api";
 import { Calendar } from "primereact/calendar";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/pedidos.css";
@@ -51,13 +51,9 @@ const Pedidos = () => {
   }, [orders, sortField, sortOrder]);
 
   useEffect(() => {
-    mockFetch('/api/pedidos')
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
-      .then(data => {
-        if (data && data.orders) setOrders(data.orders);
+    getPedidos()
+      .then((data) => {
+        if (data && Array.isArray(data.orders)) setOrders(data.orders);
         else setOrders([]);
       })
       .catch(() => {

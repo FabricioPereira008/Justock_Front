@@ -1,13 +1,27 @@
 import "../../styles/pages/login/login.css";
 import logo from "../../assets/logo_preto_baix.png";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { login } from "../../utils/auth";
 
 function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    setErro("");
+    try {
+      const usuario = await login({ email, senha });
+      window.localStorage.setItem("jt:user", JSON.stringify(usuario));
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      const mensagem = err?.message || "Usuário ou senha inválidos.";
+      setErro(mensagem);
+    }
   };
 
   return (
@@ -32,6 +46,8 @@ function Login() {
               type="email"
               id="email"
               placeholder="E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -41,9 +57,17 @@ function Login() {
               type="password"
               id="senha"
               placeholder="Senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
               required
             />
           </div>
+
+          {erro && (
+            <div role="alert" data-testid="login-error" className="mensagem-erro-login">
+              {erro}
+            </div>
+          )}
 
           <button type="submit" className="botao-login">
             Entrar

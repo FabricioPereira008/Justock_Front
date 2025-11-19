@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FiCheckCircle, FiAlertTriangle, FiXCircle } from "react-icons/fi";
 import "../../styles/pages/dashboard/dashboard.css";
 
-import mockFetch from "../../mocks/dashboardMocks";
+import { getDashboardResumo, getDashboardInventoryOverview, getDashboardRecentActivity, getDashboardAlerts } from "../../utils/api";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -76,8 +76,7 @@ const Dashboard = () => {
   // Carrega dados dependentes de tema (paleta) sempre que 'isDark' alterar
   useEffect(() => {
     let cancelled = false;
-    mockFetch("/api/inventory-overview")
-      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
+    getDashboardInventoryOverview()
       .then((data) => {
         if (cancelled) return;
         setChartData({
@@ -109,31 +108,29 @@ const Dashboard = () => {
     const handler = (e) => applyA11yToCharts(!!e?.detail?.altoContraste);
     window.addEventListener('jt:accessibility-updated', handler);
 
-    mockFetch("/api/total-products")
-      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
-      .then((data) => setTotalProducts(data && typeof data.total === 'number' ? data.total : 0));
-
-    mockFetch("/api/low-stock-products")
-      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
-      .then((data) => setLowStockProducts(data && typeof data.total === 'number' ? data.total : 0));
-
-    mockFetch("/api/connected-marketplaces")
-      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
-      .then((data) => setConnectedMarketplaces(data && typeof data.total === 'number' ? data.total : 0));
-
-    mockFetch("/api/sync-status")
-      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
-      .then((data) => setSyncStatus(data && typeof data.status === 'string' ? data.status : 'OFF'));
+    getDashboardResumo()
+      .then((data) => {
+        setTotalProducts(typeof data.total === "number" ? data.total : 0);
+        setLowStockProducts(typeof data.lowStock === "number" ? data.lowStock : 0);
+        setConnectedMarketplaces(typeof data.connectedMarketplaces === "number" ? data.connectedMarketplaces : 0);
+        setSyncStatus(typeof data.syncStatus === "string" ? data.syncStatus : "OFF");
+      })
+      .catch(() => {
+        setTotalProducts(0);
+        setLowStockProducts(0);
+        setConnectedMarketplaces(0);
+        setSyncStatus("OFF");
+      });
 
     // inventory-overview é carregado em um effect separado que respeita 'isDark'
 
-    mockFetch("/api/recent-activity")
-      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
-      .then((data) => setRecentActivity(data && Array.isArray(data.activities) ? data.activities : []));
+    getDashboardRecentActivity()
+      .then((data) => setRecentActivity(Array.isArray(data.activities) ? data.activities : []))
+      .catch(() => setRecentActivity([]));
 
-    mockFetch("/api/alerts")
-      .then((res) => res && typeof res.json === 'function' ? res.json() : res)
-      .then((data) => setAlerts(data && Array.isArray(data.alerts) ? data.alerts : []));
+    getDashboardAlerts()
+      .then((data) => setAlerts(Array.isArray(data.alerts) ? data.alerts : []))
+      .catch(() => setAlerts([]));
     const onAppearance = (e) => {
       if (e?.detail?.theme) setIsDark(e.detail.theme === 'dark');
       else if (document?.body) setIsDark(document.body.getAttribute('data-theme') === 'dark');

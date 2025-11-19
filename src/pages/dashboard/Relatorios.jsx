@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import mockFetch from "../../mocks/dashboardMocks";
+import { getRelatoriosPorAno } from "../../utils/api";
 import "../../styles/pages/dashboard/dashboard.css";
 import "../../styles/pages/dashboard/relatorios.css";
 
@@ -64,8 +64,7 @@ const Relatorios = () => {
   });
 
   useEffect(() => {
-    mockFetch(`/api/reports/${filters.year}`)
-      .then(r => r.json())
+    getRelatoriosPorAno(filters.year)
       .then(setRaw)
       .catch(() => setRaw(null));
   }, [filters.year]);

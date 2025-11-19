@@ -10,7 +10,7 @@ import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 import App from './App.jsx'
-import './mocks/dashboardMocks.js'
+// Backend agora vem do json-server (db.json)
 import { initAppearance } from './utils/appearance.js'
 import { initAccessibility } from './utils/accessibility.js'
 

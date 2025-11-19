@@ -11,7 +11,7 @@ import { FiHome, FiBox, FiShoppingCart, FiLink, FiBarChart2, FiSettings } from "
 import { getSidebarPref } from "../../utils/appearance";
 import { getAccessibilityPrefs } from "../../utils/accessibility";
 
-// Delay constants para suavizar animação somente no modo misto.
+// Delay constants para suavizar animação no modo misto
 const MIX_OPEN_DELAY = 150;
 const MIX_CLOSE_DELAY = 60;
 let mixedHoverPersist = false;
