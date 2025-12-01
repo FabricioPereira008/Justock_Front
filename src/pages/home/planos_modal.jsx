@@ -12,7 +12,7 @@ const planos = [
     usuarios: "1 usuário",
     integracoes: "Integrações ilimitadas",
     produtos: "Produtos ilimitados",
-    suporte: "Suporte via email",
+    suporte: "Suporte via chat/email (horário comercial)",
     recomendado: false,
   },
   {
@@ -21,7 +21,7 @@ const planos = [
     usuarios: "10 usuários",
     integracoes: "Integrações ilimitadas",
     produtos: "Produtos ilimitados",
-    suporte: "Suporte via chat/email",
+    suporte: "Suporte via chat/email (prioritário)",
     recomendado: true,
   },
   {
@@ -30,7 +30,7 @@ const planos = [
     usuarios: "Usuários ilimitados",
     integracoes: "Integrações ilimitadas",
     produtos: "Produtos ilimitados",
-    suporte: "Suporte prioritário 24/7",
+    suporte: "Suporte prioritário 24/7 (SLA reduzido)",
     recomendado: false,
   },
 ];

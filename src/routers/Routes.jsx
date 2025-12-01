@@ -13,6 +13,7 @@ import Pedidos from "../pages/dashboard/Pedidos.jsx";
 import Conexoes from "../pages/dashboard/Conexoes.jsx";
 import Relatorios from "../pages/dashboard/Relatorios.jsx";
 import Configuracoes from "../pages/dashboard/Configuracoes.jsx";
+import Assinatura from "../pages/dashboard/Assinatura.jsx";
 import DashboardLayout from "../components/dashboard/DashboardLayout.jsx";
 import ErrorBoundary from "../components/common/ErrorBoundary.jsx";
 import { applyAppearance } from "../utils/appearance.js";
@@ -20,7 +21,7 @@ import { applyAppearance } from "../utils/appearance.js";
 const DashboardScope = ({ children }) => {
   const location = useLocation();
   useLayoutEffect(() => {
-    const paths = ["/dashboard", "/conexoes", "/produtos", "/pedidos", "/relatorios", "/settings"]; 
+    const paths = ["/dashboard", "/conexoes", "/produtos", "/pedidos", "/relatorios", "/configuracoes", "/assinatura"]; 
     const isDash = paths.some(p => location.pathname.startsWith(p));
     if (typeof document !== 'undefined') {
       document.body.classList.toggle('dashboard-scope', isDash);
@@ -60,7 +61,8 @@ const Routs = () => {
             <Route path="/produtos" element={<ErrorBoundary><Produtos /></ErrorBoundary>} />
             <Route path="/pedidos" element={<ErrorBoundary><Pedidos /></ErrorBoundary>} />
             <Route path="/relatorios" element={<ErrorBoundary><Relatorios /></ErrorBoundary>} />
-            <Route path="/settings" element={<ErrorBoundary><Configuracoes /></ErrorBoundary>} />
+            <Route path="/configuracoes" element={<ErrorBoundary><Configuracoes /></ErrorBoundary>} />
+            <Route path="/assinatura" element={<ErrorBoundary><Assinatura /></ErrorBoundary>} />
           </Route>
         </Routes>
       </div>

@@ -259,6 +259,49 @@ body.sidebar-no-transition .barra_lateral-texto {
 [data-theme="dark"] .filter-button { background: #334155 !important; color: var(--jt-text) !important; border-color: #3b4a5e !important; }
 [data-theme="dark"] .clear-filter-button { background: #44586a !important; }
 
+[data-theme="dark"] .card-plano-atual,
+[data-theme="dark"] .card-metodo-pagamento,
+[data-theme="dark"] .card-historico {
+  background: var(--jt-surface) !important;
+  border-color: var(--jt-border) !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
+}
+
+[data-theme="dark"] .card-plano-atual,
+[data-theme="dark"] .card-plano-atual .plano-nome,
+[data-theme="dark"] .card-plano-atual .plano-beneficios,
+[data-theme="dark"] .card-metodo-pagamento,
+[data-theme="dark"] .card-metodo-pagamento h3,
+[data-theme="dark"] .card-metodo-pagamento .proxima-cobranca,
+[data-theme="dark"] .card-historico,
+[data-theme="dark"] .card-historico .titulo-historico {
+  color: var(--jt-text) !important;
+}
+
+[data-theme="dark"] .tabela-historico .p-datatable-thead > tr > th {
+  background: #1e293b !important;
+  color: #e5eef7 !important;
+}
+
+[data-theme="dark"] .tabela-historico .p-datatable-tbody > tr > td {
+  color: var(--jt-text) !important;
+  border-color: var(--jt-border) !important;
+}
+
+[data-theme="dark"] .btn-alterar-plano,
+[data-theme="dark"] .btn-alterar-metodo {
+  background: #334155 !important;
+  border-color: #3b4a5e !important;
+  color: var(--jt-text) !important;
+}
+
+[data-theme="dark"] .btn-alterar-plano,
+[data-theme="dark"] .btn-metodo-alternativo {
+  background: #334155 !important;
+  border-color: #3b4a5e !important;
+  color: var(--jt-text) !important;
+}
+
 [data-theme="dark"] .btn-filtrar { background: #334155 !important; color: var(--jt-text) !important; border: 1px solid #3b4a5e !important; }
 [data-theme="dark"] .botao-filtro { background: #334155 !important; color: var(--jt-text) !important; border: 1px solid #3b4a5e !important; }
 [data-theme="dark"] .botao-filtro:hover { background: #3b4a5e !important; }

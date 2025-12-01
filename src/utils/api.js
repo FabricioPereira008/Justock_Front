@@ -65,3 +65,21 @@ export async function getRelatoriosPorAno(ano) {
   }
   return relatorio;
 }
+
+export async function getAssinatura() {
+  const res = await fetch(`${API_BASE_URL}/assinatura`);
+  const data = await handleResponse(res);
+  return data;
+}
+
+export async function getUsuario(id) {
+  const res = await fetch(`${API_BASE_URL}/usuarios/${id}`);
+  return handleResponse(res);
+}
+
+export async function getUsuarios(params = {}) {
+  const query = new URLSearchParams(params).toString();
+  const url = query ? `${API_BASE_URL}/usuarios?${query}` : `${API_BASE_URL}/usuarios`;
+  const res = await fetch(url);
+  return handleResponse(res);
+}

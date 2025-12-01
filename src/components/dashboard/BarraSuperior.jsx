@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./barra_superior.css";
 import { FiHelpCircle, FiBell, FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import SuporteModal from "../suporte/SuporteModal";
 import { getAccessibilityPrefs } from "../../utils/accessibility";
 import PerfilDialog from "./PerfilDialog";
 
 const BarraSuperior = () => {
+  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -163,7 +165,19 @@ const BarraSuperior = () => {
                   setOpenPerfil(true);
                 }}
               >
-                Ver Perfil
+                Perfil
+              </a>
+              <a
+                href="#assinatura"
+                className="dropdown-perfil-link"
+                role="menuitem"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowProfile(false);
+                  navigate("/assinatura");
+                }}
+              >
+                Assinatura
               </a>
               <a
                 href="#sair"

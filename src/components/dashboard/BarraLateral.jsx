@@ -219,7 +219,7 @@ const BarraLateral = () => {
 
 
         <li>
-          <NavLink to="/settings" className={linkClass} aria-label="Configurações" title="Configurações">
+          <NavLink to="/configuracoes" className={linkClass} aria-label="Configurações" title="Configurações">
             <FiSettings className="barra_lateral-ico" aria-hidden="true" />
             <span className="barra_lateral-texto">Configs.</span>
           </NavLink>
