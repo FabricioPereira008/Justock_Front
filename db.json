@@ -189,7 +189,7 @@
   "usuarios": [
     {
       "id": 1,
-      "nome": "Admin Justock",
+      "nome": "Rodrigo Secundo Araújo",
       "email": "admin@justock.com",
       "senha": "123456",
       "role": "ADMIN"

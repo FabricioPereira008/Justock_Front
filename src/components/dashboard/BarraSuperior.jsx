@@ -3,6 +3,7 @@ import "./barra_superior.css";
 import { FiHelpCircle, FiBell, FiSearch } from "react-icons/fi";
 import SuporteModal from "../suporte/SuporteModal";
 import { getAccessibilityPrefs } from "../../utils/accessibility";
+import PerfilDialog from "./PerfilDialog";
 
 const BarraSuperior = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -11,6 +12,7 @@ const BarraSuperior = () => {
   const [openSuporte, setOpenSuporte] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const notificationsCount = notifications.length;
+  const [openPerfil, setOpenPerfil] = useState(false);
 
   const notificationsRef = useRef(null);
   const profileRef = useRef(null);
@@ -133,16 +135,50 @@ const BarraSuperior = () => {
         </div>
 
         <div ref={profileRef} style={{ position: 'relative', display: 'inline-flex' }}>
-          <button type="button" className="avatar-usuario" onClick={toggleProfile} aria-haspopup="menu" aria-expanded={showProfile} aria-controls="dropdown-perfil" aria-label="Abrir menu do usuário">U</button>
+          <button
+            type="button"
+            className="avatar-usuario"
+            onClick={toggleProfile}
+            aria-haspopup="menu"
+            aria-expanded={showProfile}
+            aria-controls="dropdown-perfil"
+            aria-label="Abrir menu do usuário"
+          >
+            U
+          </button>
           {showProfile && (
-            <div id="dropdown-perfil" className={`dropdown-perfil ${showProfile ? 'show' : ''}`} role="menu" aria-label="Menu do usuário">
-              <a href="/profile" role="menuitem">Ver Perfil</a>
-              <a href="#" role="menuitem" onClick={handleLogout}>Sair</a>
+            <div
+              id="dropdown-perfil"
+              className={`dropdown-perfil ${showProfile ? 'show' : ''}`}
+              role="menu"
+              aria-label="Menu do usuário"
+            >
+              <a
+                href="#perfil"
+                className="dropdown-perfil-link"
+                role="menuitem"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowProfile(false);
+                  setOpenPerfil(true);
+                }}
+              >
+                Ver Perfil
+              </a>
+              <a
+                href="#sair"
+                className="dropdown-perfil-link"
+                role="menuitem"
+                onClick={handleLogout}
+              >
+                Sair
+              </a>
             </div>
           )}
         </div>
       </div>
       <SuporteModal open={openSuporte} onClose={() => setOpenSuporte(false)} />
+      <PerfilDialog open={openPerfil} onClose={() => setOpenPerfil(false)} />
       {showLogoutModal && (
         <div className="modal-sobreposicao">
           <div className="modal-conteudo">

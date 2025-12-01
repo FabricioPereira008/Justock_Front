@@ -163,7 +163,9 @@
   transform: scale(1);
 }
 
-.dropdown-perfil a {
+.dropdown-perfil a,
+.dropdown-perfil-link,
+.dropdown-perfil .dropdown-perfil-link {
   display: block;
   padding: 10px 15px;
   color: #333;
@@ -171,7 +173,9 @@
   font-size: 14px;
 }
 
-.dropdown-perfil a:hover {
+.dropdown-perfil a:hover,
+.dropdown-perfil-link:hover,
+.dropdown-perfil .dropdown-perfil-link:hover {
   background: #f5f5f5;
 }
 
