@@ -44,7 +44,8 @@ const COLORS = {
   orange: "#f97316",
   darkTeal: "#0f3d3e",
 };
-const GREYS = ["#9aa6b2", "#6b7785", "#3e4b59"];
+
+const GREYS = ["#243b53", "#7b8794", "#e4e7ec"];
 
 const DEFAULT_MONTHS = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
@@ -178,6 +179,7 @@ const Relatorios = () => {
       sets.push(buildDataset(filters.marketplace, color, m.completed, m.canceled, m.revenue));
     }
 
+    // Aumenta o tamanho dos pontos e a espessura das linhas
     return { labels: months, datasets: sets };
   }, [agg, months, filters.marketplace, lineMetric, isDark]);
 
@@ -222,7 +224,15 @@ const Relatorios = () => {
           }
         }
       },
-      elements: { point: { radius: 2 } },
+      elements: {
+        point: {
+          radius: 5,
+          hoverRadius: 7,
+        },
+        line: {
+          borderWidth: 3,
+        },
+      },
     });
   }, [lineMetric, isDark]);
 
@@ -428,7 +438,22 @@ const Funnel = ({ data, isDark }) => {
     widths[idxOutros] = Math.max(30, targetOutros);
   }
 
-  const colors = isDark ? ["#9aa6b2", "#6b7785", "#3e4b59", "#2b3542"] : [COLORS.blue, COLORS.orange, COLORS.green, COLORS.darkTeal];
+  // Funil em escala de cinza puro no modo escuro, sem repetição
+  const funnelGreys = [
+    "#020617",
+    "#111827",
+    "#1f2937",
+    "#374151",
+    "#4b5563",
+    "#6b7280",
+    "#9ca3af",
+    "#d1d5db",
+    "#e5e7eb",
+  ];
+
+  const colors = isDark
+    ? data.map((_, idx) => funnelGreys[idx % funnelGreys.length])
+    : [COLORS.blue, COLORS.orange, COLORS.green, COLORS.darkTeal];
 
   const rows = widths.map((w, i) => {
   const next = i < n - 1 ? widths[i + 1] : Math.max(10, w * 0.6);
@@ -451,8 +476,25 @@ const Funnel = ({ data, isDark }) => {
     <svg className="funnel-svg" viewBox={`0 0 100 ${totalHeight}`} preserveAspectRatio="xMidYMid meet">
       {rows.map((r, idx) => (
         <g key={idx}>
-          <polygon className="funnel-seg" points={r.points} fill={r.color} opacity="0.98" stroke="#ffffff" strokeWidth="0.8" />
-          <text x="50" y={r.labelY} textAnchor="middle" className="funnel-text">{r.label}</text>
+          <polygon
+            className="funnel-seg"
+            points={r.points}
+            fill={r.color}
+            opacity="0.98"
+            stroke="#111111"
+            strokeWidth="1.2"
+          />
+          <text
+            x="50"
+            y={r.labelY}
+            textAnchor="middle"
+            className="funnel-text"
+            stroke="#000000"
+            strokeWidth="0.4"
+            paintOrder="stroke"
+          >
+            {r.label}
+          </text>
         </g>
       ))}
     </svg>
